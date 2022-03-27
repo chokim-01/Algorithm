@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.LinkedList;
+import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Scanner;
 
@@ -12,7 +13,7 @@ public class Main {
 	static int[][][] visit;
 	static int mirrorCnt;
 
-	static class Node {
+	static class Node implements Comparable<Node>{
 		int x, y, d, cnt;
 
 		public Node(int x, int y, int d, int cnt) {
@@ -21,6 +22,12 @@ public class Main {
 			this.y = y;
 			this.d = d;
 			this.cnt = cnt;
+		}
+
+		@Override
+		public int compareTo(Node o) {
+			// TODO Auto-generated method stub
+			return this.cnt - o.cnt;
 		}
 	}
 
@@ -54,7 +61,7 @@ public class Main {
 	}
 
 	static int bfs(int startX, int startY) {
-		Queue<Node> q = new LinkedList<>();
+		PriorityQueue<Node> q = new PriorityQueue<>();
 		for (int i = 0; i < 4; i++) {
 			q.add(new Node(startX, startY, i, 0));
 			visit[startX][startY][i] = 0;
@@ -65,7 +72,8 @@ public class Main {
 			Node n = q.poll();
 			if (startX != n.x || startY != n.y) {
 				if (map[n.x][n.y] == '#') {
-					ans = ans < n.cnt ? ans : n.cnt;
+					ans = n.cnt;
+					break;
 				}
 			}
 			int nx = n.x + dxy[n.d][0];
