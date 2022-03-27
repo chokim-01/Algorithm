@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
 	static int[][] dxy = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
@@ -31,9 +32,9 @@ public class Main {
 		}
 	}
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		N = sc.nextInt();
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		N = Integer.parseInt(br.readLine());
 		map = new char[N][N];
 		visit = new boolean[N][N][4];
 
@@ -42,9 +43,8 @@ public class Main {
 		mirrorCnt = 0;
 
 		for (int i = 0; i < N; i++) {
-			String s = sc.next();
+			map[i] = br.readLine().toCharArray();
 			for (int j = 0; j < N; j++) {
-				map[i][j] = s.charAt(j);
 				if (map[i][j] == '#') {
 					startX = i;
 					startY = j;
