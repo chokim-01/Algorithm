@@ -10,7 +10,7 @@ public class Main {
 	static int[][] dxy = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
 	static int N;
 	static char[][] map;
-	static int[][][] visit;
+	static boolean[][][] visit;
 	static int mirrorCnt;
 
 	static class Node implements Comparable<Node>{
@@ -35,7 +35,7 @@ public class Main {
 		Scanner sc = new Scanner(System.in);
 		N = sc.nextInt();
 		map = new char[N][N];
-		visit = new int[N][N][4];
+		visit = new boolean[N][N][4];
 
 		int startX = 0;
 		int startY = 0;
@@ -51,8 +51,6 @@ public class Main {
 				}
 				if (map[i][j] == '!')
 					mirrorCnt += 1;
-				for (int k = 0; k < 4; k++)
-					visit[i][j][k] = Integer.MAX_VALUE;
 			}
 		}
 
@@ -64,7 +62,7 @@ public class Main {
 		PriorityQueue<Node> q = new PriorityQueue<>();
 		for (int i = 0; i < 4; i++) {
 			q.add(new Node(startX, startY, i, 0));
-			visit[startX][startY][i] = 0;
+			visit[startX][startY][i] = true;
 		}
 
 		int ans = Integer.MAX_VALUE;
@@ -80,9 +78,9 @@ public class Main {
 			int ny = n.y + dxy[n.d][1];
 			if (!mapChk(nx, ny) || map[nx][ny] == '*')
 				continue;
-			if (visit[nx][ny][n.d] <= n.cnt)
+			if (visit[nx][ny][n.d])
 				continue;
-			visit[nx][ny][n.d] = n.cnt;
+			visit[nx][ny][n.d] = true;
 			if (map[nx][ny] == '.' || map[nx][ny] == '#') {
 				q.add(new Node(nx, ny, n.d, n.cnt));
 			} else if (map[nx][ny] == '!') {
