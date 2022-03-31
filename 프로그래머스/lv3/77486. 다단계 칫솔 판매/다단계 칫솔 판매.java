@@ -1,45 +1,72 @@
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 class Solution {
-    static HashMap<String,Integer> humans;
-	static int[] money;
-	static int[] referParent;
-    
+
     public int[] solution(String[] enroll, String[] referral, String[] seller, int[] amount) {
-        // 번호 center 0, 나머지
-		// 배열 습득한 돈
-		money = new int[enroll.length + 1];
+        Map<String, Member> members = new HashMap<>();
 
-		// HashMap 사람 번호
-		humans = new HashMap<>();
-		int cnt = 1;
-		humans.put("-", 0);
-		for (int i = 0; i < enroll.length; i++)
-			humans.put(enroll[i], cnt++);
+        for (String name : enroll
+        ) {
+            members.put(name, new Member(name));
+        }
+        for (int i=0;  i< members.size(); i++) {
+            Member member = members.get(enroll[i]);
+            if (!referral[i].equals("-")){
+            member.setCcin(members.get(referral[i]));}
+            else{
+                member.setCcin(new Member("Minho"));
+            }
+        }
+        for (int j=0; j<amount.length; j++) {
+            Member m = members.get(seller[j]);
+            m.plusMoney(amount[j] * 100);
+        }
+        int[] answer = {};
 
-		// refererral 배열
-		referParent = new int[enroll.length + 1];
-		for (int i = 0; i < referral.length; i++)
-			referParent[i + 1] = humans.get(referral[i]);
-
-		for (int i = 0; i < seller.length; i++) 
-			dfs(humans.get(seller[i]), amount[i] * 100);
-		
-        int[] answer = new int[enroll.length];
-        for(int i = 0;i<answer.length;i++)
-            answer[i] = money[i+1];
-        
+        answer = new int[enroll.length];
+        for (int k =0; k<enroll.length; k++){
+            answer[k] = members.get(enroll[k]).getMoney();
+        }
         return answer;
-        
+
     }
-    static void dfs(int now, int amount) {
-		if((amount / 10) < 1 || now == 0) {
-			money[now] += amount;
-			return;
-		}
-		money[now] += amount - amount/10;
-		// next
-		dfs(referParent[now], amount/10);
-		
-	}
+
+
+    static class Member {
+        private Member ccin;
+        private String name;
+        int money;
+
+        public void plusMoney(int money) {
+            if (ccin != null) {
+                int boonbae = money / 10;
+                this.setMoney(this.getMoney() + money - boonbae);
+                ccin.plusMoney(boonbae);
+            } else {
+                this.setMoney(this.getMoney() + money);
+            }
+        }
+        public Member(String name) {
+            this.name = name;
+        }
+
+        public Member getCcin() {
+            return ccin;
+        }
+
+        public void setCcin(Member ccin) {
+            this.ccin = ccin;
+        }
+
+        public int getMoney() {
+            return money;
+        }
+
+        public void setMoney(int money) {
+            this.money = money;
+        }
+    }
 }
