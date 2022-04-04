@@ -1,16 +1,17 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 class Main {
 	static int N, M;
 	static int dxy[][] = { { 0, -1 }, { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, 1 }, { 1, 1 }, { 1, 0 }, { 1, -1 } };
 	static int[][] map;
+	static boolean[][] visit;
 
-	static LinkedList<Node> cloudLoc;
+	static Queue<Node> cloudLoc;
 
 	static class Node {
 		int x, y;
@@ -31,6 +32,7 @@ class Main {
 
 		// map
 		map = new int[N][N];
+		visit = new boolean[N][N];
 		for (int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < N; j++)
@@ -65,37 +67,34 @@ class Main {
 			cloudSet();
 		}
 		System.out.println(getAns());
-
 	}
 
 	// 1. 구름 이동
 	static void cloudMove(int dir, int cnt) {
-		for (int i = 0; i < cloudLoc.size(); i++) {
-			Node n = cloudLoc.get(i);
+		int size = cloudLoc.size();
+
+		for (int i = 0; i < size; i++) {
+
+			Node n = cloudLoc.poll();
 
 			int nx = n.x + cnt * dxy[dir][0];
 			int ny = n.y + cnt * dxy[dir][1];
 
-			nx = (nx + cnt*N) % N;
-			ny = (ny + cnt*N) % N;
-
-			cloudLoc.set(i, new Node(nx, ny));
+			nx = (nx + cnt * N) % N;
+			ny = (ny + cnt * N) % N;
+			cloudLoc.add(new Node(nx, ny));
 		}
 	}
 
 	// 2. 구름이 비를 뿌림
 	static void cloudRain() {
-		for (int i = 0; i < cloudLoc.size(); i++) {
-			Node n = cloudLoc.get(i);
-
+		for (Node n : cloudLoc) 
 			map[n.x][n.y] += 1;
-		}
 	}
 
 	// 4-1. 물 양의 증가
 	static void cloudAddWater() {
-		for (int i = 0; i < cloudLoc.size(); i++) {
-			Node n = cloudLoc.get(i);
+		for (Node n : cloudLoc) {
 			int cnt = calcWater(n.x, n.y);
 			map[n.x][n.y] += cnt;
 		}
@@ -116,10 +115,11 @@ class Main {
 
 	// 5. 구름 생성
 	static void cloudSet() {
-		boolean[][] visit = new boolean[N][N];
+		for(int i = 0;i<N;i++)
+			Arrays.fill(visit[i], false);
 
 		for (Node n : cloudLoc)
-			visit[n.x][n.y] = true;
+			visit[n.x][n.y]= true; 
 		cloudLoc.clear();
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < N; j++) {
@@ -127,7 +127,6 @@ class Main {
 					continue;
 				map[i][j] -= 2;
 				cloudLoc.add(new Node(i, j));
-
 			}
 		}
 	}
