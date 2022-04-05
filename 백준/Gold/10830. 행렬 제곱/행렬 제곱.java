@@ -1,50 +1,49 @@
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Scanner;
 
 class Main {
 	static int N;
 	static long B;
 
-	static LinkedHashMap<Long, int[][]> list;
+	static LinkedList<int[][]> list;
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		N = sc.nextInt();
 		B = sc.nextLong();
 		int[][] now = new int[N][N];
-		list = new LinkedHashMap<Long, int[][]>();
-
+		list = new LinkedList<>();
+		String bin =Long.toBinaryString(B);
+		
 		for (int i = 0; i < N; i++)
 			for (int j = 0; j < N; j++)
 				now[i][j] = sc.nextInt()%1000;
 
-		list.put((long) 1, now);
-
-		long num = 2;
-		while (num <= B) {
-
+		list.add(now);
+		list.add(now); // 1부터 시작
+		
+		
+		for(int i = 2;i<=bin.length();i++) {
 			now = calc(now,now);
-			
-			list.put(num, now);
-			num *= 2;
+			list.add(now);
 		}
-		Object[] keyset = list.keySet().toArray();
-		Arrays.sort(keyset,Collections.reverseOrder());
-		int index = 0;
-		B = B-(long)keyset[0];
-		int[][] ans = list.get(keyset[0]);
-		while(true) {
-			if(B == 0)
-				break;
-			if((long)keyset[index] > B) {
-				index++;
+		// 단위행렬
+		int[][] ans = new int[N][N];
+		for(int i = 0;i<N;i++)
+			ans[i][i] = 1;
+		
+		for(int i = bin.length()-1;i>=0;i--) {
+			if(bin.charAt(i) == '0')
 				continue;
-			}
-			B = B-(long)keyset[index];
-			ans = calc(ans,list.get(keyset[index]));
+			ans = calc(list.get(bin.length()-i),ans);
 		}
+		
+		print(ans);
+		
+	}
+	static void print(int[][] ans) {
 		StringBuffer sb = new StringBuffer();
 		for(int i = 0;i<N;i++) {
 			for(int j = 0;j<N;j++) {
