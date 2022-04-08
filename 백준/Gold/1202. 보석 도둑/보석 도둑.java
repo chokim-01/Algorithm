@@ -68,10 +68,16 @@ public class Main {
 				if (knapsack[i] < list[j][0]) // 선택한 knapsack을 제거해야함..
 					break;
 				q.add(list[j][1]); // 선택 : 지금까지 추가했던 것들 중 가장 큰것. pq써야함
+				if(list[j][0] == knapsack[i]) {
+					j++;
+					break;
+				}
 			}
 			if(!q.isEmpty()) // 가장 큰것 빼줌
 				ans += q.poll();
 		}
 		System.out.println(ans);
+
 	}
+
 }
