@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Scanner;
@@ -6,7 +7,7 @@ import java.util.Stack;
 class Main {
 
 	static int N, K;
-	static LinkedList<LinkedList<Integer>> list;
+	static ArrayList<LinkedList<Integer>> list;
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
@@ -15,7 +16,7 @@ class Main {
 		K = sc.nextInt();
 
 		// 링크드리스트 안에 링크드리스트
-		list = new LinkedList<>();
+		list = new ArrayList<>();
 
 		for (int i = 0; i < N; i++) {
 			list.add(new LinkedList<>());
@@ -31,7 +32,7 @@ class Main {
 
 			// 옮기는 경우
 			dfs();
-			
+
 			// N/2 옮기기
 			dfs2(0);
 			if (endFlag())
@@ -88,12 +89,11 @@ class Main {
 
 		int index = 0;
 		while (!s.isEmpty()) {
-			int n = s.pop();
-			list.get(index).add(n);
+			list.get(index).add(s.pop());
 			if (++index == ySize)
 				index = 0;
 		}
-		dfs2(idx+1);
+		dfs2(idx + 1);
 	}
 
 	// dfs : 위로 올리고 회전. 가장 왼쪽에 있는 값을.
@@ -140,7 +140,7 @@ class Main {
 	}
 
 	static void changeList() {
-		LinkedList<LinkedList<Integer>> newList = new LinkedList<>();
+		ArrayList<LinkedList<Integer>> newList = new ArrayList<>();
 
 		int index = 0;
 		for (int i = 0; i < list.size(); i++) {
@@ -174,8 +174,8 @@ class Main {
 						map[i][j + 1] += minus;
 					}
 				}
+				
 				// 오른쪽과의 차이
-
 				if (i + 1 < xSize) {
 					if (list.get(i + 1).size() > j) {
 						int minus = (list.get(i).get(j) - list.get(i + 1).get(j)) / 5;
@@ -189,18 +189,12 @@ class Main {
 						}
 					}
 				}
-
 			}
 		}
-
-		for (int i = 0; i < N; i++)
-			for (int j = 0; j < N; j++)
+		for (int i = 0; i < list.size(); i++)
+			for (int j = 0; j < list.get(i).size(); j++)
 				if (map[i][j] != 0)
 					list.get(i).set(j, list.get(i).get(j) + map[i][j]);
-
-//		for (int i = 0; i < map.length; i++)
-//			System.out.println(Arrays.toString(map[i]));
-//		print();
 	}
 
 	static void print() {
