@@ -9,8 +9,8 @@ public class Main {
 
 	static int N, M;
 	static int[][] map;
-	static HashMap<Integer, Node> customers;
 	static int taxiX, taxiY, taxiK;
+	static HashMap<Integer, Node> customers;
 	static int[][] dxy = { { -1, 0 }, { 0, -1 }, { 0, 1 }, { 1, 0 } };
 
 	static class Node {
@@ -27,7 +27,6 @@ public class Main {
 			this.y = y;
 		}
 
-		// dist : 택시와의 거리
 		public Node(int num, int x, int y, int destX, int destY) {
 			// TODO Auto-generated constructor stub
 			this.num = num;
