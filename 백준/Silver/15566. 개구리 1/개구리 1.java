@@ -35,8 +35,7 @@ public class Main {
 			frogLotus[i] = new ArrayList<>();
 			edges[i] = new ArrayList<>();
 		}
-        // Init
-        
+
 		for (int i = 1; i <= N; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (int j = 0; j < 4; j++)
@@ -57,8 +56,7 @@ public class Main {
 			edges[a].add(new Node(b, c));
 			edges[b].add(new Node(a, c));
 		}
-        // Input
-        
+
 		dfs(1, new boolean[N + 1], new int[N + 1]);
 
 		System.out.println("NO");
@@ -67,18 +65,6 @@ public class Main {
 	// ans : 연꽃 번호 당 frog
 	static void dfs(int index, boolean[] visit, int[] ans) {
 		if (index == N + 1) {
-			// 배치가 끝난 다음 통나무 검사
-			for (int i = 0; i < edges.length; i++) {
-				if (edges[i].isEmpty())
-					continue;
-				for (int j = 0; j < edges[i].size(); j++) {
-					Node n = edges[i].get(j);
-					// 통나무 선호 : n.cnt
-					// i와 n.to의 cnt를 비교
-					if (frogInterest[ans[i]][n.cnt] != frogInterest[ans[n.to]][n.cnt])
-						return;
-				}
-			}
 			System.out.println("YES");
 			for (int i = 1; i <= N; i++)
 				System.out.print(ans[i] + " ");
@@ -86,13 +72,22 @@ public class Main {
 			return;
 		}
 
-		// 연꽃을 놓음.
+		// 연꽃에 개구리를 놓음. index : 개구리
 		for (int lotus : frogLotus[index]) { // lotus
 			if (visit[lotus])
 				continue;
 			visit[lotus] = true;
 			ans[lotus] = index;
-			dfs(index + 1, visit, ans);
+			// 들어가기 전 통나무 검사
+			boolean flag = true;
+			for (Node n : edges[lotus]) {
+				if (!visit[n.to])
+					continue;
+				if (frogInterest[ans[lotus]][n.cnt] != frogInterest[ans[n.to]][n.cnt])
+					flag = false;
+			}
+			if (flag)
+				dfs(index + 1, visit, ans);
 			ans[lotus] = 0;
 			visit[lotus] = false;
 		}
