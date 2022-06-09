@@ -2,9 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -24,10 +22,10 @@ public class Main {
 			String oS = o.s;
 			String thisS = this.s;
 
-			boolean flag = false;
+			int flag = 1;
 
 			if (oLen > thisLen) {
-				flag = true;
+				flag = -1;
 				String tmp = oS;
 				oS = thisS;
 				thisS = tmp;
@@ -43,56 +41,47 @@ public class Main {
 					char thisNow = thisS.charAt(i);
 
 					if (i == thisS.length() - 1) {
-						if(thisNow == now) {
-							int nI = i%oLen;
+						if (thisNow == now) {
+							int nI = i % oLen;
 							int nthisI = i;
-							
-							for(int n = 0;n<thisS.length();n++) {
-								nI = (nI+1)%oLen;
-								nthisI = (nthisI +1)%thisLen;
-								
+
+							for (int n = 0; n < thisS.length(); n++) {
+								nI = (nI + 1) % oLen;
+								nthisI = (nthisI + 1) % thisLen;
+
 								int noS = oS.charAt(nI);
 								int nthisS = thisS.charAt(nthisI);
-								if(noS > nthisS)
-									return 1 * (flag ? -1 : 1);
-								else if(noS == nthisS)
+								if (noS == nthisS)
 									continue;
+                                else if (noS > nthisS)
+									return flag;
 								else
-									return -1 * (flag ? -1 : 1);
+									return -flag;
 							}
-							
-							return -1 * (flag ? -1 : 1);
+							return -flag;
 						}
 						if (thisNow < now)
-							return 1 * (flag ? -1 : 1);
+							return flag;
 						else
-							return -1 * (flag ? -1 : 1);
+							return -flag;
 					}
 					if (thisNow == now)
 						continue;
-
-					else if (thisNow > now) {
-						return -1 * (flag ? -1 : 1);
-					} else {
-						return 1 * (flag ? -1 : 1);
-					}
+					else if (thisNow > now)
+						return -flag;
+					else
+						return flag;
 				}
 
 				if (oS.charAt(i) == thisS.charAt(i))
 					continue;
 
 				if (oS.charAt(i) > thisS.charAt(i))
-					return 1 * (flag ? -1 : 1);
+					return flag;
 				else
-					return -1 * (flag ? -1 : 1);
+					return -flag;
 			}
-
-			return thisS.compareTo(oS);
-		}
-
-		@Override
-		public String toString() {
-			return this.s;
+			return flag;
 		}
 	}
 
