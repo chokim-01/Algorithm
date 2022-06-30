@@ -1,4 +1,3 @@
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
@@ -25,15 +24,9 @@ public class Main {
 		while (true) {
 			// 1.
 			ans += 1;
-			rotate(belt, robotLoc);
-			move(robotLoc, belt);
-			if (belt[0] != 0) {
-				robot.add(0);
-				belt[0] -= 1;
-				if (belt[0] == 0)
-					zeroCnt += 1;
-				robotLoc[0] = true;
-			}
+			rotate(belt, robotLoc); // 벨트 회전
+			move(belt, robotLoc); // 로봇 이동
+			raiseRobot(belt,robotLoc); // 로봇 올리기
 
 			if (zeroCnt >= K)
 				break;
@@ -42,8 +35,27 @@ public class Main {
 	}
 
 	static int zeroCnt;
-
-	static void move(boolean[] robotLoc, int[] belt) {
+	static void rotate(int[] belt, boolean[] robotLoc) {
+		for (int i = 0; i < robot.size(); i++) {
+			int now = robot.get(i);
+			int next = (now + 1) % (2 * N);
+			if(next == N-1) {
+				robot.remove(i);
+				robotLoc[now] = false;
+				i--;
+				continue;
+			}
+			robot.set(i, next);
+			robotLoc[now] = false;
+			robotLoc[next] = true;
+		}
+		int tmp = belt[2 * N - 1];
+		for (int i = 2 * N - 1; i > 0; i--)
+			belt[i] = belt[i - 1];
+		belt[0] = tmp;
+	}
+	
+	static void move(int[] belt, boolean[] robotLoc) {
 		for (int i = 0; i < robot.size(); i++) {
 			int now = robot.get(i);
 			int next = (now + 1) % (2 * N);
@@ -66,26 +78,17 @@ public class Main {
 					zeroCnt += 1;
 			}
 		}
-
 	}
-
-	static void rotate(int[] belt, boolean[] robotLoc) {
-		for (int i = 0; i < robot.size(); i++) {
-			int now = robot.get(i);
-			int next = (now + 1) % (2 * N);
-			if(next == N-1) {
-				robot.remove(i);
-				robotLoc[now] = false;
-				i--;
-				continue;
-			}
-			robot.set(i, next);
-			robotLoc[now] = false;
-			robotLoc[next] = true;
+	
+	static void raiseRobot(int[] belt, boolean[] robotLoc) {
+		if (belt[0] != 0) {
+			robot.add(0);
+			belt[0] -= 1;
+			if (belt[0] == 0)
+				zeroCnt += 1;
+			robotLoc[0] = true;
 		}
-		int tmp = belt[2 * N - 1];
-		for (int i = 2 * N - 1; i > 0; i--)
-			belt[i] = belt[i - 1];
-		belt[0] = tmp;
 	}
+
+
 }
