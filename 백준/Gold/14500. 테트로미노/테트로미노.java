@@ -117,15 +117,15 @@ public class Main {
 			int now = beforeMinY - (c - 1) < 1 ? 1 : beforeMinY - (c - 1); // 스타트지점 부터 c개를 선택
 
 			for (; now <= beforeMaxY; now++) {
-				if (now < 1) // 왼쪽 초과
-					continue;
+
 				if (now + (c - 1) > M) // 오른쪽 초과
 					break;
 
 				int nowSum = 0;
-				if (c == 1)
-					nowSum = arr[x][now];
-				else {
+				if (c <= 55) {
+					for (int i = now; i <= now + c - 1; i++)
+						nowSum += arr[x][i];
+				} else {
 					// 선택한 지역 넣어주기
 					nowSum = tree[x].sum(1, 1, M, now, now + c - 1);
 				}
