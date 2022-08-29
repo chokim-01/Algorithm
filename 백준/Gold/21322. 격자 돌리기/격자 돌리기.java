@@ -61,21 +61,17 @@ public class Main {
 	}
 
 	static void mapToList(int[][] map) {
-		// 둘레 갯수
 		int cntOfRound = N / 2;
-		// 바깥부터 0
+
 		beltList = new ArrayList[cntOfRound];
-		for (int i = 0; i < beltList.length; i++)
+		for (int i = 0; i < cntOfRound; i++)
 			beltList[i] = new ArrayList<>();
 
-		// round 개수만큼
 		for (int roundNum = 0; roundNum < cntOfRound; roundNum++) {
-			// 8일 경우, 7칸 5칸 3칸 1칸
 			int roundCnt = N - 2 * roundNum;
 			int x = roundNum;
 			int y = roundNum;
 
-			// dxy 4번 반복.
 			for (int d = 0; d < 4; d++) {
 				for (int rCnt = 1; rCnt < roundCnt; rCnt++) {
 					beltList[roundNum].add(map[x][y]);
@@ -87,24 +83,19 @@ public class Main {
 	}
 
 	static void moveBelt(int a, long b) {
-		// 시계방향으로 N번
 		int bSize = beltList[a].size();
 		int c = (int) (b % bSize);
+		
 		ArrayList<Integer> tmp = new ArrayList<Integer>(beltList[a].subList(bSize - c, bSize));
+		
 		while (c-- > 0)
 			beltList[a].remove(beltList[a].size() - 1);
 		beltList[a].addAll(0, tmp);
+		
 		moveBelts[a] = 0;
 	}
 
-	static boolean mapChk(int x, int y) {
-		if (x < 0 || y < 0 || x >= N || y >= N)
-			return false;
-		return true;
-	}
-
 	static int[] calcXY(int x, int y) {
-		// x, y 상하좌우 중 벽과의 차이가 가장 작은 것,
 		int[] arr = new int[] { x, y, N - 1 - x, N - 1 - y };
 		Arrays.sort(arr);
 		int a = arr[0];
@@ -115,14 +106,12 @@ public class Main {
 			int maxXY = (N - 1) - a;
 			b = 4 * maxXY - x - y - 2 * a;
 		}
-
 		return new int[] { a, b };
 	}
 
 	static void rotateSquare(int a, int b) {
-
-		// 좌표를 구함
 		int[][] arr = new int[4][2];
+		
 		for (int i = 0; i < 4; i++)
 			arr[i] = calcXY(a + d[i][0], b + d[i][1]);
 
@@ -131,7 +120,9 @@ public class Main {
 				continue;
 			moveBelt(arr[i][0], moveBelts[arr[i][0]]);
 		}
+		
 		int tmp = beltList[arr[3][0]].get(arr[3][1]);
+		
 		for (int i = 3; i > 0; i--)
 			beltList[arr[i][0]].set(arr[i][1], beltList[arr[i - 1][0]].get(arr[i - 1][1]));
 		beltList[arr[0][0]].set(arr[0][1], tmp);
