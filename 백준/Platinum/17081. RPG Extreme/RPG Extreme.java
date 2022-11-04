@@ -11,8 +11,21 @@ public class Main {
 	static Obj[][] map;
 
 	static class User {
+
+		// 레벨
+		int level;
+		// Loc
+		int x, y;
+		// 체력 공격력 방어력, 경험치, 기본 능력치
+		int health, maxHealth, offenseP, deffenseP, experience;
+		// 장비
+		int weapon, armor;
+		// 체력 회복, 부활, 공격력 두배, 경험치 1.2배, 데미지 1 (2와 함께착용 -> 3배 적용, 보스몬스터와 전투 시 최대치, 첫공격에 0의 데미지, 능력 없음 )
+		// 네개 까지 착용
+		int accCount;
+		Boolean[] accessories;
+		
 		public User(int x, int y) {
-			super();
 			this.level = 1;
 			this.health = 20;
 			this.maxHealth = 20;
@@ -25,12 +38,13 @@ public class Main {
 			this.accessories = new Boolean[7];
 			Arrays.fill(this.accessories, false);
 		}
-
+		// 승리 후 경험치 획득
 		public void increaseExperience(int e) {
 			// 레벨 N에서 레벨 N+1이 되기 위한 경험치는 5*N;
 			if (accessories[3])
 				e = (int) (e * 1.2);
 			this.experience += e;
+			// 레벨업 시 능력치 상승 및 경험치 초기화
 			if (this.level * 5 <= this.experience) {
 				this.experience = 0;
 				this.level += 1;
@@ -40,7 +54,7 @@ public class Main {
 				this.health = this.maxHealth;
 			}
 		}
-
+		// 아이템 박스 조우 시 장비 장착
 		public void equip(int w, int a, String s) {
 			this.weapon = (w == 0 ? this.weapon : w);
 			this.armor = (a == 0 ? this.armor : a);
@@ -76,17 +90,17 @@ public class Main {
 				}
 			}
 		}
-
+		// 함정
 		public void fallTrap() {
 			this.health = this.health - (this.accessories[4] ? 1 : 5);
 		}
-
+		// 공격 시 공격력 계산
 		public int calcAttack(boolean aCount) {
 			int attack = this.offenseP + this.weapon;
 			int verse = 1;
 			if (aCount == true) { // 첫 번째 공격
-				if (accessories[2]) {
-					if (accessories[4]) {
+				if (accessories[2]) { // 3번째 장신구 (두배) 
+					if (accessories[4]) { // 5번째 장신구(3배) 
 						verse = 3;
 					} else {
 						verse = 2;
@@ -117,26 +131,6 @@ public class Main {
 		public void HU() {
 			this.health = this.maxHealth;
 		}
-
-		// 레벨
-		int level;
-		// Loc
-		int x, y;
-		// 체력 공격력 방어력
-		int health;
-		int maxHealth;
-		int offenseP;
-		int deffenseP;
-		// 경험치
-		int experience;
-
-		int weapon;
-		int armor;
-		// 체력 회복, 부활, 공격력 두배, 경험치 1.2배, 데미지 1 (2와 함께착용 -> 3배 적용, 보스몬스터와 전투 시 최대치, 첫공격에
-		// 0의 데미지, 능력 없음 )
-		// 네개 까지 착용
-		int accCount;
-		Boolean[] accessories;
 	}
 
 	static class Obj {
@@ -149,20 +143,37 @@ public class Main {
 			// TODO Auto-generated constructor stub
 			this.order = order;
 		}
-
+		// 몬스터 생성
 		public void makeMonster(String s, int w, int a, int h, int e) {
 			this.monster = new Monster(order == 'M' ? true : false, s, w, a, h, e);
 		}
-
+		// 아이템박스 생성
 		public void makeBox(String T, String b) {
 			this.box = new Box(T, b);
 		}
 
 	}
 
+	static class Monster {
+
+		boolean boss; // 몬스터 . 보스 구별
+		String name;
+		int offenseP, deffenseP, health, maxHealth, experience;
+		
+		public Monster(boolean boss, String name, int offenseP, int deffenseP, int health, int experience) {
+			this.boss = boss;
+			this.name = name;
+			this.offenseP = offenseP;
+			this.deffenseP = deffenseP;
+			this.health = health;
+			this.maxHealth = health;
+			this.experience = experience;
+		}
+	}
+	
 	static class Box {
-		int offense;
-		int deffense;
+		// 무기 , 방어구 , 장신구 셋중 하나
+		int offense, deffense;
 		String accesory;
 
 		public Box(String T, String b) {
@@ -177,33 +188,10 @@ public class Main {
 				this.accesory = b;
 			}
 		}
-
 	}
 
-	static class Monster {
-		public Monster(boolean boss, String name, int offenseP, int deffenseP, int health, int experience) {
-			super();
-			this.boss = boss;
-			this.name = name;
-			this.offenseP = offenseP;
-			this.deffenseP = deffenseP;
-			this.health = health;
-			this.maxHealth = health;
-			this.experience = experience;
-		}
-
-		boolean boss;
-		String name;
-		int offenseP;
-		int deffenseP;
-		int health;
-		int maxHealth;
-		int experience;
-
-	}
-
-	static String moveOrder, resultS;
 	static User user;
+	static String moveOrder, resultS;
 	static int startX, startY;
 	static int[][] dxy = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
 
@@ -222,51 +210,43 @@ public class Main {
 			char o = moveOrder.charAt(t);
 			int nx = user.x;
 			int ny = user.y;
-
-			switch (o) {
-			case 'U':
-				nx = user.x + dxy[0][0];
-				ny = user.y + dxy[0][1];
-				break;
-			case 'R':
-				nx = user.x + dxy[1][0];
-				ny = user.y + dxy[1][1];
-				break;
-			case 'D':
-				nx = user.x + dxy[2][0];
-				ny = user.y + dxy[2][1];
-				break;
-			case 'L':
-				nx = user.x + dxy[3][0];
-				ny = user.y + dxy[3][1];
-				break;
-			}
+			
+			// 방향 세팅
+			int d = dxySetting(o);
+			
+			nx = user.x + dxy[d][0];
+			ny = user.y + dxy[d][1];
+			
 			// 벽 또는 격자 밖
 			if (!mapChk(nx, ny)) {
 				nx = user.x;
 				ny = user.y;
 			}
+			
 			// 몬스터
 			switch (map[nx][ny].order) {
 			// 한 쪽이 패배할 때 까지 진행
 			case '&':
-				if (!fight(nx, ny)) {// 패배
+				// 패배
+				if (!fight(nx, ny))
 					endFlag = true;
-				}
 				break;
 			// 보스
 			case 'M':
+				// 보스 조우 시 장신구 효과
 				if (user.accessories[5])
 					user.HU();
-				if (!fight(nx, ny)) { // 패배
+				// 보스 패배
+				if (!fight(nx, ny))
 					endFlag = true;
-				} else {
+				// 승리
+				else
 					victory = true;
-				}
 				break;
 			// 가시함정
 			case '^':
 				user.fallTrap();
+				// 함정 패배
 				if (user.health <= 0) {
 					resultS = "YOU HAVE BEEN KILLED BY SPIKE TRAP..";
 					endFlag = true;
@@ -288,13 +268,15 @@ public class Main {
 				user.y = ny;
 				break;
 			}
+			// 패배 시 장신구 효과
 			if (endFlag && user.accessories[1]) {
 				user.RE();
 				endFlag = false;
-				if (map[nx][ny].order != '^') {
+				// 몬스터 대결 패배 후 장신구 효과 
+				if (map[nx][ny].order != '^')
 					map[nx][ny].monster.health = map[nx][ny].monster.maxHealth;
-				}
 			}
+			// 패배 했거나 보스 전투 승리 시
 			if (endFlag || victory)
 				break;
 		}
@@ -319,26 +301,13 @@ public class Main {
 		bw.close();
 	}
 
-	static void printUserstate(int t) {
-		System.out.println("---------------------------");
-		System.out.println("Passed Turns : " + t + "\n");
-		System.out.println("LV : " + user.level + "\n");
-		System.out.println("HP : " + (user.health < 0 ? 0 : user.health) + "/" + user.maxHealth + "\n");
-		System.out.println("ATT : " + user.offenseP + "+" + user.weapon + "\n");
-		System.out.println("DEF : " + user.deffenseP + "+" + user.armor + "\n");
-		System.out.println("EXP : " + user.experience + "/" + user.level * 5 + "\n");
-		System.out.println(Arrays.toString(user.accessories));
-		System.out.println("===========================");
-		System.out.println();
-	}
-
 	static boolean fight(int nx, int ny) {
 		User u = user;
 		Monster m = map[nx][ny].monster;
 		// 공격력 - 방어력 만큼 데미지를 입힘.
 		// 항상 유저 선공
 		for (int c = 0;; c++) {
-			// 유저 공격
+			// 유저 공격 ( max (1, 유저공격력 - 몬스터 방어력)), 장신구 장착 시 첫 공격 n배
 			int uA = u.calcAttack(c == 0 ? true : false) - m.deffenseP;
 			uA = Math.max(1, uA);
 			m.health -= (uA < 0 ? 0 : uA);
@@ -352,10 +321,11 @@ public class Main {
 				map[nx][ny].order = '.';
 				return true;
 			}
+			// 보스와 전투 시 첫 번째 공격 회피
 			if (c == 0 && m.boss && u.accessories[5])
 				continue;
 
-			// 몬스터 공격
+			// 몬스터 공격 ( max (1, 몬스터 공격력 - 유저 방어력))
 			int mA = m.offenseP - (u.deffenseP + u.armor);
 			mA = Math.max(1, mA);
 			u.health -= (mA < 0 ? 0 : mA);
@@ -368,6 +338,25 @@ public class Main {
 			}
 		}
 	}
+	// 방향 세팅
+	static int dxySetting(char c) {
+		int d = -1;
+		switch (c) {
+		case 'U':
+			d = 0;
+			break;
+		case 'R':
+			d = 1;
+			break;
+		case 'D':
+			d = 2;
+			break;
+		case 'L':
+			d = 3;
+			break;
+		}
+		return d;
+	}
 
 	static boolean mapChk(int x, int y) {
 		if (x < 0 || x >= N || y < 0 || y >= M || map[x][y].order == '#')
@@ -378,6 +367,7 @@ public class Main {
 	static void printMap(BufferedWriter bw, boolean endFlag) throws IOException {
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < M; j++) {
+				// 승리 시 현재 위치
 				if (user.x == i && user.y == j && !endFlag)
 					bw.write('@');
 				else
@@ -386,7 +376,8 @@ public class Main {
 			bw.newLine();
 		}
 	}
-
+	
+	// 입력
 	static void input() throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
