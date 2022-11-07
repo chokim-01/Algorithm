@@ -8,7 +8,7 @@ import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
-	
+
 	static class Acid {
 		boolean possible;
 		boolean green, red;
@@ -62,6 +62,9 @@ public class Main {
 	static boolean[][] map;
 	static Acid[][] acidMapOrigin;
 	static List<Node> seedPossible;
+	static int ans;
+	static int[] choice;
+	static Acid[][] acidMap;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -73,69 +76,68 @@ public class Main {
 		G = Integer.parseInt(st.nextToken());
 		R = Integer.parseInt(st.nextToken());
 		map = new boolean[N][M];
+		acidMap = new Acid[N][M];
 		seedPossible = new ArrayList<>();
 
 		for (int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
 			for (int j = 0, n; j < M; j++) {
 				n = Integer.parseInt(st.nextToken());
-				if(n == 0)
+
+				if (n == 0)
 					map[i][j] = true;
 				if (n == 2)
 					seedPossible.add(new Node(i, j));
 			}
 		}
 
+		choice = new int[seedPossible.size()];
 		// 피울 수 있는 꽃의 최대 개수
-		int answer = seedSelect(new int[seedPossible.size()], true, 0, 0, 0);
-		System.out.println(answer);
+		ans = 0;
+		seedSelect(0, 0, 0);
+		System.out.println(ans);
 	}
 
-	// G,R 순서대로 설정 flag로 구별. green : 1, red : 2
-	static int seedSelect(int[] choice, boolean flag, int index, int count, int answer) {
+	static void seedSelect(int index, int g, int r) {
 		if (index == choice.length) {
-			if (!flag && count == R) { // red end
-				int a = bfs(choice);
-				return answer < a ? a : answer;
-			} else if (flag && count == G) { // green end
-				// to red
-				answer = seedSelect(choice, false, 0, 0, answer);
+			if (g == G && r == R) { // red end
+				int a = bfs();
+				ans = ans < a ? a : ans;
 			}
-			return answer;
+			return;
 		}
-		// true : green choice
-		// false : red choice
-		if (choice[index] == 0) {
-			choice[index] = flag ? 1 : 2;
-			answer = seedSelect(choice, flag, index + 1, count + 1, answer);
-			choice[index] = 0;
+
+		if (g < G) {
+			choice[index] = 1;
+			seedSelect(index + 1, g + 1, r);
+		}
+		if (r < R) {
+			choice[index] = 2;
+			seedSelect(index + 1, g, r + 1);
 		}
 		// not choice
-		answer = seedSelect(choice, flag, index + 1, count, answer);
-
-		return answer;
+		choice[index] = 0;
+		seedSelect(index + 1, g, r);
 	}
 
 	static int dxy[][] = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
 
-	static int bfs(int[] seeds) {
+	static int bfs() {
 		// origin Map clone
-		Acid[][] acidMap = new Acid[N][M];
 		for (int i = 0; i < N; i++)
 			for (int j = 0; j < M; j++)
-				acidMap[i][j] = new Acid(map[i][j]?false:true);
-			
+				acidMap[i][j] = new Acid(map[i][j] ? false : true);
 
 		Queue<Node> green = new LinkedList<>();
 		Queue<Node> red = new LinkedList<>();
 
 		int flowerCnt = 0;
-		for (int i = 0; i < seeds.length; i++) {
+		for (int i = 0; i < choice.length; i++) {
 			Node n = seedPossible.get(i);
-			if (seeds[i] == 1) {
+			if (choice[i] == 1) {
 				green.add(n);
 				acidMap[n.x][n.y].green = true;
-			} else if (seeds[i] == 2) {
+			} else if (choice[i] == 2) {
 				red.add(n);
 				acidMap[n.x][n.y].red = true;
 			}
@@ -200,12 +202,3 @@ public class Main {
 		return true;
 	}
 }
-// 배양액을 뿌릴 수 있는 곳은 정해져 있음
-// 하얀색 : 배양액을 뿌릴 수 없는 땅
-// 황토색 : 배양액을 뿌릴 수 있는 칸
-// 하늘색 : 호수
-// 모든 배양액을 남김없이 사용해야 함.
-// 모든 배양액은 서로 다른 곳에 뿌려져 있어야 한다.
-// 초록과 빨간 배양액이 동일한 시간에 만나는 지점.
-// 피울 수 있는 꽃의 최대 개수
-// 배양액을 뿌릴 수 있는 땅의 수 : R + G개 이상 10개 이하
