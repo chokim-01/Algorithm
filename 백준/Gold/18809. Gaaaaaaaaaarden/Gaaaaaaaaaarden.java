@@ -1,11 +1,14 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
+	
 	static class Acid {
 		boolean possible;
 		boolean green, red;
@@ -49,36 +52,35 @@ public class Main {
 		int x, y;
 
 		public Node(int x, int y) {
-			// TODO Auto-generated constructor stub
 			this.x = x;
 			this.y = y;
-		}
-
-		@Override
-		public String toString() {
-			return " [ " + this.x + " " + this.y + " ] ";
 		}
 	}
 
 	static int N, M, G, R; // 행, 열, 초록 배양액 수, 빨간 배양액 수
 	// 0은 호수 1은 배양액 x, 2는 배양액 뿌릴 수 있는 땅
+	static boolean[][] map;
 	static Acid[][] acidMapOrigin;
 	static List<Node> seedPossible;
 
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringTokenizer st;
 		// input
-		N = sc.nextInt();
-		M = sc.nextInt();
-		G = sc.nextInt();
-		R = sc.nextInt();
-		acidMapOrigin = new Acid[N][M];
+		st = new StringTokenizer(br.readLine());
+		N = Integer.parseInt(st.nextToken());
+		M = Integer.parseInt(st.nextToken());
+		G = Integer.parseInt(st.nextToken());
+		R = Integer.parseInt(st.nextToken());
+		map = new boolean[N][M];
 		seedPossible = new ArrayList<>();
 
 		for (int i = 0; i < N; i++) {
+			st = new StringTokenizer(br.readLine());
 			for (int j = 0, n; j < M; j++) {
-				n = sc.nextInt();
-				acidMapOrigin[i][j] = new Acid(n == 0 ? false : true);
+				n = Integer.parseInt(st.nextToken());
+				if(n == 0)
+					map[i][j] = true;
 				if (n == 2)
 					seedPossible.add(new Node(i, j));
 			}
@@ -119,12 +121,10 @@ public class Main {
 	static int bfs(int[] seeds) {
 		// origin Map clone
 		Acid[][] acidMap = new Acid[N][M];
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++) {
-				Acid a = acidMapOrigin[i][j];
-				acidMap[i][j] = new Acid(a.possible, a.green, a.red, a.time);
-			}
-		}
+		for (int i = 0; i < N; i++)
+			for (int j = 0; j < M; j++)
+				acidMap[i][j] = new Acid(map[i][j]?false:true);
+			
 
 		Queue<Node> green = new LinkedList<>();
 		Queue<Node> red = new LinkedList<>();
