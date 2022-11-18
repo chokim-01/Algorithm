@@ -77,7 +77,6 @@ public class Main {
 							q.add(new Node(nx, ny));
 						} else if (visit[nx][ny] < time)
 							break;
-
 					}
 				}
 			}
