@@ -7,8 +7,8 @@ import java.util.StringTokenizer;
 
 public class Main {
 	static int[] list;
-	static boolean flag[];
-	static LinkedHashSet<Integer> visit;
+	static boolean[] flag;
+	static boolean[] visit;
 	static int ans;
 
 	public static void main(String[] args) throws IOException {
@@ -18,8 +18,9 @@ public class Main {
 		for (int t = 0; t < T; t++) {
 			int n = Integer.parseInt(br.readLine());
 			st = new StringTokenizer(br.readLine());
-			flag = new boolean[n + 1];
 			list = new int[n + 1];
+			flag = new boolean[n + 1];
+			visit = new boolean[n + 1];
 			ans = 0;
 
 			for (int i = 1; i <= n; i++) {
@@ -30,12 +31,9 @@ public class Main {
 					ans++;
 				}
 			}
-
 			for (int i = 1; i <= n; i++) {
 				if (flag[i])
 					continue;
-				visit = new LinkedHashSet<>();
-				visit.add(i);
 				dfs(i);
 			}
 			System.out.println(n - ans);
@@ -43,21 +41,15 @@ public class Main {
 	}
 
 	static void dfs(int x) {
-		if (flag[x]) {
-			if (visit.contains(x)) {
-				Integer[] v = visit.toArray(new Integer[visit.size()]);
-				int c = v.length;
-				for (int i = 0; i < v.length; i++) {
-					if (v[i] == x)
-						break;
-					c -= 1;
-				}
-				ans += c;
-			}
+		if (flag[x]) 
 			return;
+		if(visit[x]) {
+			flag[x] = true;
+			ans++;
 		}
-		flag[x] = true;
-		visit.add(x);
+		visit[x] = true;
 		dfs(list[x]);
+		flag[x] = true;
+		visit[x] = false;
 	}
 }
