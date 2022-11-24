@@ -1,15 +1,15 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.StringTokenizer;
 
 public class Main {
 	static int[] list;
 	static boolean flag[];
-	static boolean successFlag;
 	static LinkedHashSet<Integer> visit;
-	static int tail;
+	static int ans;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -20,8 +20,7 @@ public class Main {
 			st = new StringTokenizer(br.readLine());
 			flag = new boolean[n + 1];
 			list = new int[n + 1];
-			tail = -1;
-			int ans = 0;
+			ans = 0;
 
 			for (int i = 1; i <= n; i++) {
 				int a = Integer.parseInt(st.nextToken());
@@ -36,35 +35,28 @@ public class Main {
 				if (flag[i])
 					continue;
 				visit = new LinkedHashSet<>();
-				successFlag = false;
+				visit.add(i);
 				dfs(i);
-				if (successFlag) {
-					Integer[] v = visit.toArray(new Integer[visit.size()]);
-					boolean f = false;
-					for (int k = 0; k < v.length; k++) {
-						flag[v[k]] = true;
-						if (v[k] == tail)
-							f = true;
-						if (!f)
-							continue;
-						ans++;
-					}
-				} else
-					for (Integer v : visit)
-						flag[v] = true;
 			}
 			System.out.println(n - ans);
 		}
 	}
 
 	static void dfs(int x) {
-		if (flag[x])
-			return;
-		if (visit.contains(x)) {
-			tail = x;
-			successFlag = true;
+		if (flag[x]) {
+			if (visit.contains(x)) {
+				Integer[] v = visit.toArray(new Integer[visit.size()]);
+				int c = v.length;
+				for (int i = 0; i < v.length; i++) {
+					if (v[i] == x)
+						break;
+					c -= 1;
+				}
+				ans += c;
+			}
 			return;
 		}
+		flag[x] = true;
 		visit.add(x);
 		dfs(list[x]);
 	}
