@@ -3,219 +3,218 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class Main {
-	static BufferedWriter bw;
-
 	static class Album {
-		Album parentAlbum;
-		TreeMap<String, Album> child = new TreeMap<>();
-		TreeSet<String> pictures = new TreeSet<>();
-		String aName;
-		int albumCount, pictureCount; // Al : 자식 수 , Pic : 자신 + 자식 수
+		Album parent;
+		TreeMap<String, Album> albums;
+		TreeSet<String> pictures;
+		String name;
+		int albumCount;
+		int pictureCount;
 
-///////////////////// Constructor
-		public Album(String s) {
+		public Album() {
 			// TODO Auto-generated constructor stub
-			this.aName = s;
-			this.albumCount = 0;
+		}
+
+		public Album(Album parent, String s) {
+			this.parent = parent;
+			this.albums = new TreeMap<>();
+			this.pictures = new TreeSet<>();
+			this.albumCount = 1;
 			this.pictureCount = 0;
+			this.name = s;
 		}
 
-		public Album(String s, Album p) {
-			this.parentAlbum = p;
-			this.aName = s;
-			this.albumCount = 0;
-			this.pictureCount = 0;
-		}
-/////////////////////
+/////////////// mkalb
+		boolean mkalb(String s) {
+			if (this.albums.containsKey(s))
+				return false;
 
-		void changeParentCnt(int anum, int pnum) { // 자신과 최상위까지의 Pic count를 갱신
-			Album now = this;
-			while (now.parentAlbum != null) {
-				now.albumCount += anum;
-				now.pictureCount += pnum;
-				now = now.parentAlbum;
+			Album al = new Album(this, s);
+			updateAlbumCount(this, 1);
+			this.albums.put(s, al);
+
+			return true;
+		}
+
+///////////////
+/////////////// rmalb
+		int[] rmalb(String s) {
+			int a = 0;
+			int p = 0;
+			if (this.albums.containsKey(s)) {
+				Album target = this.albums.get(s);
+				a = target.albumCount;
+				p = target.pictureCount;
+
+				this.albums.remove(s);
+				updateAlbumCount(this, -a);
+				if (p != 0)
+					updatePictureCount(this, -p);
 			}
-			now.albumCount += anum;
-			now.pictureCount += pnum;
+			return new int[] { a, p };
 		}
 
-///////////////////// Album Section
-		void mkalb(String aName) throws IOException { // 자식 앨범 추가
-			if (this.child.containsKey(aName)) {
-				print("duplicated album name");
+		int[] rmalb(int order) {
+			int[] ret = new int[]{ 0, 0 };
+			if (order == -1) {
+				if (this.albums.size() != 0) {
+					String s = this.albums.firstKey();
+					ret = rmalb(s);
+				}
+			} else if (order == 0) {
+				while (albums.size() != 0) {
+					String s = albums.firstKey();
+					int[] tmp = rmalb(s);
+					ret[0] += tmp[0];
+					ret[1] += tmp[1];
+				}
 			} else {
-				this.changeParentCnt(1, 0);
-				this.child.put(aName, new Album(aName, this));
+				if (this.albums.size() != 0) {
+					String s = this.albums.lastKey();
+					ret = rmalb(s);
+				}
 			}
+			return ret;
 		}
 
-		void rmalb(String aName) throws IOException { // 앨범과 picture 모두 삭제
-			if (aName.equals("-1")) { // 사전 순 가장 빠른 앨범 삭제
-				if (this.child.size() != 0) {
-					rmalb(String.valueOf(child.firstKey()));
+///////////////
+/////////////// insert picture
+		boolean insert(String s) {
+			if (this.pictures.contains(s))
+				return false;
 
-				} else {
-					print("0 0");
-
-				}
-
-			} else if (aName.equals("0")) { // 자식 앨범 모두 삭제
-				if (this.child.size() != 0) {
-					int a = 0;
-					int b = 0;
-					for (String s : this.child.keySet()) {
-						Album al = this.child.get(s);
-						a += al.albumCount + 1;
-						b += al.pictureCount;
-					}
-					print(a + " " + b);
-
-					this.changeParentCnt(-a, -b);
-					this.child = new TreeMap<>();
-
-				} else {
-					print("0 0");
-				}
-
-			} else if (aName.equals("1")) { // 사전 순 가장 느린 앨범 삭제
-				if (this.child.size() != 0) {
-					rmalb(String.valueOf(child.lastKey()));
-
-				} else {
-					print("0 0");
-				}
-
-			} else if (this.child.containsKey(aName)) {// S의 이름을 가진 앨범 삭제.
-				Album nowAlbum = this.child.get(aName);
-				print((nowAlbum.albumCount + 1) + " " + nowAlbum.pictureCount);
-
-				this.changeParentCnt(-(nowAlbum.albumCount + 1), -nowAlbum.pictureCount);
-				this.child.remove(aName);
-				
-			} else {
-				print("0 0");
-			}
+			this.pictures.add(s);
+			updatePictureCount(this, 1);
+			return true;
 		}
-/////////////////////
 
-///////////////////// Picture Section
-		void insertPicture(String s) throws IOException { // 앨범에 사진 추가
+///////////////
+/////////////// delete
+		int delete(String s) {
 			if (this.pictures.contains(s)) {
-				print("duplicated photo name");
-
-			} else {
-				this.changeParentCnt(0, 1);
-				this.pictures.add(s);
+				this.pictures.remove(s);
+				updatePictureCount(this, -1);
+				return 1;
 			}
+			return 0;
 		}
 
-		void deletePicture(String s) throws IOException { // 사진 삭제
-			if (s.equals("-1")) { // 사전 순 가장 빠른 사진 삭제
+		int delete(int order) {
+			int ret = 0;
+			if (order == -1) {
 				if (this.pictures.size() != 0) {
-					
-					this.changeParentCnt(0, -1);
-					this.pictures.remove(pictures.first());
-					print("1");
-				} else {
-					print("0");
+					delete(this.pictures.first());
+					ret = 1;
 				}
-				
-			} else if (s.equals("0")) { // 사진 모두 삭제
+			} else if (order == 0) {
 				int size = this.pictures.size();
-				this.changeParentCnt(0, -size);
-				print(String.valueOf(size));
 				this.pictures = new TreeSet<>();
-				
-			} else if (s.equals("1")) { // 사전 순 가장 느린 사진 삭제
-				if (this.pictures.size() != 0) {
-					
-					this.pictures.remove(pictures.last());
-					this.changeParentCnt(0, -1);
-					print("1");
-				} else {
-					print("0");
-				}
-				
-			} else if (pictures.contains(s)) { // s 이름을 가지는 사진 삭제
-				pictures.remove(s);
-				this.changeParentCnt(0, -1);
-				print("1");
+				updatePictureCount(this, -size);
+				ret = size;
 			} else {
-				print("0");
-			}
-		}
-/////////////////////
-
-///////////////////// ca Section
-		Album moveCa(String s) throws IOException {
-			if (s.equals("..")) { // 상위 앨범으로 이동
-				if (this.parentAlbum != null) {
-					print(this.parentAlbum.aName);
-					return this.parentAlbum;
-				} else {
-					print("album");
-					return null;
+				if (this.pictures.size() != 0) {
+					delete(this.pictures.last());
+					ret = 1;
 				}
-			} else if (s.equals("/")) { // 최상위 앨범으로 이동
-				print("album");
-				return null;
-			} else if (this.child.containsKey(s)) { // s 이름을 가진 앨범으로 이동
-				print(this.child.get(s).aName);
-				return this.child.get(s);
 			}
-			// s 이름을 가진 앨범이 없음
-			print(this.aName);
-			return this;
+			return ret;
 		}
-	}
-/////////////////////
 
-	static void print(String s) throws IOException {
-		bw.write(s);
-		bw.newLine();
+///////////////
+/////////////// ca
+		Album ca(String s) {
+			Album ret = this;
+			switch (s) {
+			case "..":
+				if (this.parent != null)
+					ret = this.parent;
+				break;
+			case "/":
+				ret = top;
+				break;
+			default:
+				if (this.albums.containsKey(s)) {
+					Album now = this.albums.get(s);
+					ret = now;
+				}
+				break;
+			}
+			return ret;
+		}
+
+/////////////// 
+/////////////// update method
+		void updateAlbumCount(Album now, int count) {
+			while (now != null) {
+				now.albumCount += count;
+				now = now.parent;
+			}
+		}
+
+		void updatePictureCount(Album now, int count) {
+			while (now != null) {
+				now.pictureCount += count;
+				now = now.parent;
+			}
+		}
+///////////////
 	}
 
-	public static void main(String[] args) throws NumberFormatException, IOException {
+	static Album top;
+
+	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		bw = new BufferedWriter(new OutputStreamWriter(System.out));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringTokenizer st;
 
 		int N = Integer.parseInt(br.readLine());
 
-		Album now = new Album("album");
-		Album root = now;
+		Album now = new Album(null, "album");
+		top = now;
 
-		for (int tc = 0; tc < N; tc++) {
+		for (int i = 0; i < N; i++) {
 			st = new StringTokenizer(br.readLine());
-			switch (st.nextToken()) {
+			String order = st.nextToken();
+			String detail = st.nextToken();
+			int detailNum = -2;
+			try {
+				detailNum = Integer.parseInt(detail);
+			} catch (Exception e) {
+			}
+
+			switch (order) {
 			case "mkalb":
-				now.mkalb(st.nextToken());
+				if (!now.mkalb(detail))
+					bw.write("duplicated album name\n");
 				break;
 			case "rmalb":
-				now.rmalb(st.nextToken());
+				int[] ans = null;
+				if (detailNum != -2)
+					ans = now.rmalb(detailNum);
+				else
+					ans = now.rmalb(detail);
+				bw.write(ans[0] + " " + ans[1] + "\n");
 				break;
 			case "insert":
-				now.insertPicture(st.nextToken());
+				if (!now.insert(detail))
+					bw.write("duplicated photo name\n");
 				break;
 			case "delete":
-				now.deletePicture(st.nextToken());
+				int a = 0;
+				if (detailNum != -2)
+					a = now.delete(detailNum);
+				else
+					a = now.delete(detail);
+				bw.write(a + "\n");
 				break;
 			case "ca":
-				now = now.moveCa(st.nextToken());
-				if (now == null)
-					now = root;
+				now = now.ca(detail);
+				bw.write(now.name + "\n");
 				break;
 			}
 		}
