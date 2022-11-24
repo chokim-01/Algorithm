@@ -3,6 +3,13 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -133,6 +140,7 @@ public class Main {
 				
 			} else if (s.equals("1")) { // 사전 순 가장 느린 사진 삭제
 				if (this.pictures.size() != 0) {
+					
 					this.pictures.remove(pictures.last());
 					this.changeParentCnt(0, -1);
 					print("1");
