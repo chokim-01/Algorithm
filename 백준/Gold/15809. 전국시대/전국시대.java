@@ -1,94 +1,113 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Set;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
+    public static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out), 1024 * 64);
+    public static int N, M;
+    public static int[] arr, cost;
+    public static boolean[] visited;
+    public static void main(String[] args) throws Exception {
+    	BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    	StringTokenizer st;
+    	st = new StringTokenizer(br.readLine());
+        N = Integer.parseInt(st.nextToken());
+        M = Integer.parseInt(st.nextToken());
+        arr = new int[N + 1];
+        cost = new int[N + 1];
+        for(int i = 1; i <= N; i++) {
+            cost[i] = Integer.parseInt(br.readLine());
+            arr[i] = i;
+        }
+        for(int i = 0; i < M; i++) {
+        	st = new StringTokenizer(br.readLine());
 
-	static int[] army;
-	static int[] alliance;
-	static boolean[] country;
+            int command = Integer.parseInt(st.nextToken());
+            int from = Integer.parseInt(st.nextToken());
+            int to = Integer.parseInt(st.nextToken());
+            union(from, to, command);
+        }
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        for(int i = 1; i <= N; i++) {
+            if(cost[i] > 0) {
+                pq.add(cost[i]);
+            }
+        }
+        int s = pq.size();
+        bw.write(Integer.toString(s));
+        bw.newLine();
+        while(!pq.isEmpty()) {
+            int current = pq.poll();
+            boolean abs = current < 0;
+            if(abs) {
+                current *= -1;
+                bw.write(45);
+            }
+            int size = current == 0 ? 0 : (int) Math.log10(current);
+            while(size >= 0) {
+                int nextSize = current == 0 ? 0 : (int) Math.log10(current);
+                int div = (int) Math.pow(10, nextSize);
+                while(size > nextSize) {
+                    bw.write(48);
+                    size--;
+                }
+                if(div != 0) {
+                    bw.write((current / div) + 48);
+                    current %= div;
+                } else {
+                    bw.write(48);
+                }
+                size--;
+            }
+            if(s > 1) {
+                bw.write(32);
+            }
+            s--;
+        }
+        bw.flush();
+        bw.close();
+    }
+    public static void union(int from, int to, int command) {
+        int x = find(from);
+        int y = find(to);
 
-	public static void main(String[] args) throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-		st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
+        if(command == 1) {
+            if(x < y) {
+                arr[y] = arr[x];
+                cost[x] += cost[y];
+                cost[y] = 0;
+            } else {
+                arr[x] = arr[y];
+                cost[y] += cost[x];
+                cost[x] = 0;
+            }
+        } else {
+            if(cost[x] == cost[y]) {
+                arr[x] = 0;
+                arr[y] = 0;
+                cost[x] = 0;
+                cost[y] = 0;
+            } else if(cost[x] < cost[y]) {
+                arr[x] = arr[y];
+                cost[y] -= cost[x];
+                cost[x] = 0;
+            } else {
+                arr[y] = arr[x];
+                cost[x] -= cost[y];
+                cost[y] = 0;
+            }
+        }
+    }
+    public static int find(int target) {
+        if(target == arr[target]) {
+            return target;
+        }
+        return arr[target] = find(arr[target]);
+    }
 
-		army = new int[N + 1];
-		alliance = new int[N + 1];
-		for (int i = 1; i <= N; i++) {
-			alliance[i] = i;
-			army[i] = Integer.parseInt(br.readLine());
-		}
-
-		for (int i = 0, o, p, q; i < M; i++) {
-			st = new StringTokenizer(br.readLine());
-			o = Integer.parseInt(st.nextToken());
-			p = Integer.parseInt(st.nextToken());
-			q = Integer.parseInt(st.nextToken());
-
-			if (o == 1) // 연합
-				union(p, q);
-			else // 전쟁
-				fight(p, q);
-
-		}
-		ArrayList<Integer> country = new ArrayList<>();
-		for (int i = 0; i < army.length; i++)
-			if (army[i] != 0)
-				country.add(army[i]);
-		Collections.sort(country);
-
-		System.out.println(country.size());
-		for (int i = 0; i < country.size(); i++)
-			System.out.print(country.get(i) + " ");
-
-	}
-
-	static void fight(int x, int y) {
-		x = find(x);
-		y = find(y);
-		if (army[x] == army[y]) { // destruc
-			army[x] = 0;
-			army[y] = 0;
-		} else if (army[x] < army[y]) {// y win
-			army[y] -= army[x];
-			army[x] = 0;
-		} else {// x win
-			army[x] -= army[y];
-			army[y] = 0;
-		}
-		union(x, y);
-
-	}
-
-	static void union(int x, int y) {
-		x = find(x);
-		y = find(y);
-		if (x == y)
-			return;
-		if (x < y) {
-			alliance[y] = x;
-			army[x] += army[y];
-			army[y] = 0;
-		} else {
-			alliance[x] = y;
-			army[y] += army[x];
-			army[x] = 0;
-		}
-	}
-
-	static int find(int x) {
-		if (x == alliance[x])
-			return x;
-		return alliance[x] = find(alliance[x]);
-	}
 }
