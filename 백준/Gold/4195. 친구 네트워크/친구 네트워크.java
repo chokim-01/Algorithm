@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -12,6 +14,7 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringTokenizer st;
 		int T = Integer.parseInt(br.readLine());
 
@@ -35,9 +38,11 @@ public class Main {
 				if (!map.containsKey(b))
 					map.put(b, cnt++);
 				union(map.get(a), map.get(b));
-				System.out.println(count[find(map.get(b))]);
+				bw.write(count[find(map.get(b))]+"\n");
 			}
 		}
+		bw.flush();
+		bw.close();
 	}
 
 	static void union(int x, int y) {
