@@ -8,7 +8,7 @@ import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
-    public static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out), 1024 * 64);
+    public static BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
     public static int N, M;
     public static int[] arr, cost;
     public static boolean[] visited;
