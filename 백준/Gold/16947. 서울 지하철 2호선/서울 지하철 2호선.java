@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -10,20 +11,18 @@ import java.util.StringTokenizer;
 
 public class Main {
 	static int N;
-	static LinkedHashSet<Integer> visited;
+	static boolean[] cycle;
 	static boolean[] visit;
 	static ArrayList<Integer>[] con;
-	static HashSet<Integer> cycle;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 
 		N = Integer.parseInt(br.readLine());
-		visited = new LinkedHashSet<>();
+		cycle = new boolean[N + 1];
 		visit = new boolean[N + 1];
 		con = new ArrayList[N + 1];
-		cycle = new HashSet<>();
 
 		for (int i = 1; i <= N; i++)
 			con[i] = new ArrayList<>();
@@ -37,37 +36,40 @@ public class Main {
 			con[b].add(a);
 		}
 
-		findCycle(1, 0);
+		findCycle(1, 0, new boolean[N + 1]);
 
 		for (int i = 1; i <= N; i++)
 			System.out.print(bfs(i) + " ");
 	}
 
-	static void findCycle(int now, int before) {
-		if (cycle.size() != 0)
-			return;
-		visited.add(now);
+	static boolean findCycle(int now, int before, boolean[] visit) {
+		visit[now] = true;
 		for (int next : con[now]) {
 			if (next == before)
 				continue;
-			if (visited.contains(next)) { // cycle add
-				boolean f = false;
-				for (int v : visited) {
-					if (v == next)
-						f = true;
-					if (f) 
-						cycle.add(v);
+			if (visit[next]) {
+				visit[next] = false;
+				cycle[next] = true;
+				return true;
+			} else {
+				if (findCycle(next, now, visit)) {
+					if (visit[now]) { // cycle add
+						cycle[next] = true;
+						return true;
+					} else {
+						visit[now] = true;
+						cycle[next] = true;
+						return false;
+					}
 				}
-				return;
 			}
-			findCycle(next, now);
 		}
-		visited.remove(now);
+		return false;
 	}
 
 	static int bfs(int x) {
 		int time = 0;
-		if (cycle.size() == 0 || cycle.contains(x))
+		if (cycle[x])
 			return time;
 
 		visit = new boolean[N + 1];
@@ -83,7 +85,7 @@ public class Main {
 				for (int next : con[now]) {
 					if (visit[next])
 						continue;
-					if (cycle.contains(next))
+					if (cycle[next])
 						return time;
 					visit[next] = true;
 					q.add(next);
