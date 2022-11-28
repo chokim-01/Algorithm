@@ -44,10 +44,10 @@ public class Main {
 	}
 
 	static void findCycle(int now, int before) {
+		if (cycle.size() != 0)
+			return;
 		visited.add(now);
 		for (int next : con[now]) {
-			if (cycle.size() != 0)
-				return;
 			if (next == before)
 				continue;
 			if (visited.contains(next)) { // cycle add
