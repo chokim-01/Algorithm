@@ -54,7 +54,6 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 		StringBuffer sb = new StringBuffer();
 		while (true) {
 			if (!input(br))
@@ -68,14 +67,6 @@ public class Main {
 		}
 		System.out.println(sb.toString());
 	}
-
-//	static void delEdge(int now) {
-//		for (int before : route[now].list) {
-//			doNotEnter[before][now] = true;
-//			if (before != start)
-//				delEdge(before);
-//		}
-//	}
 
 	static void delEdge(int now) {
 		Queue<Integer> q = new LinkedList<>();
@@ -124,7 +115,6 @@ public class Main {
 					route[next.dest].add(nCost, now);
 				} else if (nCost == visit[next.dest])
 					route[next.dest].add(nCost, now);
-
 			}
 		}
 		if (visit[end] == Integer.MAX_VALUE)
