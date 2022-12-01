@@ -99,11 +99,8 @@ public class Main {
 		if (flag)
 			xRange = minX / 2 * 2;
 
-		boolean findFlag = false;
-
 		// 해당 되는 지점까지 진행
 		for (int i = 0; i < xRange; i++) {
-			findFlag = true;
 			for (int c = 0; c < M - 1; c++) {
 				String s = convertDxy(startDxy[d][0], startDxy[d][1], true);
 				startSb.append(s);
@@ -131,8 +128,9 @@ public class Main {
 		int ex = minX / 2 * 2 + 1;
 		int ey = M - 1;
 
-		if (findFlag)
+		if (startSb.length() != 0)
 			startSb.append("D");
+		
 		Queue<Node> q = new LinkedList<>();
 		q.add(new Node(minX / 2 * 2, 0, 0));
 		while (!q.isEmpty()) {
@@ -152,6 +150,7 @@ public class Main {
 		}
 		if (endSb.length() != 0)
 			endSb.insert(0, "D");
+		
 		startSb.append(endSb);
 		return startSb.toString();
 	}
@@ -162,7 +161,6 @@ public class Main {
 				return "D";
 			else
 				return "U";
-
 		}
 		if (x == 0 && y == 1) {
 			if (flag)
