@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -18,92 +19,20 @@ public class Main {
 		input();
 		answer = Integer.MAX_VALUE;
 		// graph
-		graph();
-		// bfs
-//		bfs();
-
-		if (answer == Integer.MAX_VALUE)
-			System.out.println(-1);
-		else
-			System.out.println(answer == Integer.MAX_VALUE ? -1 : answer);
-
-	}
-
-	static class Node {
-		int x;
-		boolean[] v = new boolean[N];
-
-		public Node(int x) {
-			// TODO Auto-generated constructor stub
-			this.x = x;
-		}
-	}
-
-	static void bfs() {
-		for (int t = 0; t < N; t++) { // 정점 1개 선택
-			Queue<Node> q = new LinkedList<>();
-			Node n = new Node(t);
-			n.v[t] = true;
-			q.add(new Node(t));
-			
-			while (!q.isEmpty()) {
-				n = q.poll();
-				// q2 선택하지 않은 곳 아무데서나.
-				int b = 0;
-				for (; b < N; b++)
-					if (!n.v[b])
-						break;
-				if (b == N)
-					return;
-				if (bfs2(b, n.v)) {
-					int area1 = 0;
-					for (int i = 0; i < N; i++)
-						if (n.v[i])
-							area1 += people[i];
-					int a12 = Math.abs(2 * area1 - total);
-					answer = answer < a12 ? answer : a12;
-				}
-				for (int c : con[n.x]) {
-					if (n.v[c])
-						continue;
-					Node nc = new Node(c);
-					nc.v = n.v.clone();
-					nc.v[c] = true;
-					q.add(nc);
-				}
-			}
-		}
-	}
-
-	static boolean bfs2(int x, boolean[] visit2) {
-		boolean[] visit = visit2.clone();
-		Queue<Integer> q = new LinkedList<>();
-		visit[x] = true;
-		q.add(x);
-		while (!q.isEmpty()) {
-			int n = q.poll();
-			for (int c : con[n]) {
-				if (visit[c])
-					continue;
-				visit[c] = true;
-				q.add(c);
-			}
-		}
-		for (int i = 0; i < N; i++)
-			if (!visit[i])
-				return false;
-		return true;
-	}
-
-	static void graph() {
 		for (int c = 1; c <= N / 2; c++)
 			comb(0, c, new boolean[N]);
+
+		System.out.println(answer == Integer.MAX_VALUE ? -1 : answer);
+
 	}
 
 	static void comb(int idx, int choice, boolean[] visit) {
 		if (choice == 0) {
 			// execute
-			int a = findParent(visit);
+			int a = 0;
+//			a = graph(visit); // grpah
+			a = bfs(visit); // bfs
+
 			answer = answer < a ? answer : a;
 			return;
 		}
@@ -116,7 +45,52 @@ public class Main {
 		comb(idx + 1, choice, visit);
 	}
 
-	static int findParent(boolean[] visit) {
+	static int bfs(boolean[] visit) {
+		int start1 = 0; // 구역 1, visit을 방문 해야함
+		int start2 = 0; // 구역 2, !visit을 방문해야함
+		boolean[] newVisit = new boolean[N];
+		for (int i = 0; i < N; i++) {
+			newVisit[i] = !visit[i];
+			if (visit[i])
+				start1 = i;
+			else
+				start2 = i;
+		}
+		boolean[] v2 = findSection(start2, visit);
+		for (int i = 0; i < N; i++)
+			if (!visit[i] && !v2[i])
+				return Integer.MAX_VALUE;
+
+		boolean[] v1 = findSection(start1, newVisit);
+		for (int i = 0; i < N; i++)
+			if (!newVisit[i] && !v1[i])
+				return Integer.MAX_VALUE;
+		
+		int ans = 0;
+		for (int i = 0; i < N; i++)
+			if (visit[i])
+				ans += people[i];
+		return Math.abs(2 * ans - total);
+	}
+
+	static boolean[] findSection(int x, boolean[] v) {
+		boolean[] visit = v.clone();
+		Queue<Integer> q = new LinkedList<>();
+		q.add(x);
+		visit[x] = true;
+		while (!q.isEmpty()) {
+			int n = q.poll();
+			for (int next : con[n]) {
+				if (visit[next])
+					continue;
+				visit[next] = true;
+				q.add(next);
+			}
+		}
+		return visit;
+	}
+
+	static int graph(boolean[] visit) {
 		parent = new int[N];
 		parent2 = new int[N];
 		for (int i = 0; i < N; i++) {
@@ -127,7 +101,7 @@ public class Main {
 			for (int n : con[i]) {
 				if (visit[i] && visit[n]) {
 					union(i, n, parent);
-				} else if(!visit[i] && !visit[n]){
+				} else if (!visit[i] && !visit[n]) {
 					union(i, n, parent2);
 				}
 			}
@@ -188,8 +162,10 @@ public class Main {
 			st = new StringTokenizer(br.readLine());
 			if (st.nextToken().equals("0"))
 				continue;
-			while (st.hasMoreTokens())
-				con[i].add(Integer.parseInt(st.nextToken()) - 1);
+			while (st.hasMoreTokens()) {
+				int a = Integer.parseInt(st.nextToken()) - 1;
+				con[i].add(a);
+			}
 		}
 	}
 }
