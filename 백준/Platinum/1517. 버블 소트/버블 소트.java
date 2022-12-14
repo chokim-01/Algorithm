@@ -111,7 +111,7 @@ public class Main {
 		int time = -1;
 		while (!q.isEmpty()) {
 			Node n = q.poll();
-			int index = n.index + tree.sum(1, 1, N, n.index, N) - ++time;
+			int index = n.index + tree.sum(1, 1, N, n.index+1, N) - ++time;
 			if (index == 0)
 				continue;
 			tree.update(1, 1, N, n.index, 1);
