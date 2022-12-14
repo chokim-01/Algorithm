@@ -1,8 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
@@ -21,7 +19,6 @@ public class Main {
 			if (this.num == n.num)
 				return this.index - n.index;
 			return this.num - n.num;
-
 		}
 	}
 
@@ -105,6 +102,7 @@ public class Main {
 			n = Integer.parseInt(st.nextToken());
 			q.add(new Node(i, n));
 		}
+		
 		SegmentTree tree = new SegmentTree(N);
 		int[] arr = new int[N + 1];
 		tree.init(arr, 1, 1, N);
@@ -112,13 +110,12 @@ public class Main {
 		long ans = 0;
 		int time = -1;
 		while (!q.isEmpty()) {
-			time++;
 			Node n = q.poll();
-			int index = n.index + tree.sum(1, 1, N, n.index, N);
-			if (index == time)
+			int index = n.index + tree.sum(1, 1, N, n.index, N) - ++time;
+			if (index == 0)
 				continue;
 			tree.update(1, 1, N, n.index, 1);
-			ans += index - time;
+			ans += index;
 		}
 		System.out.println(ans);
 	}
