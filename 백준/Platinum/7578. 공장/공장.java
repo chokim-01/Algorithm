@@ -97,27 +97,28 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		HashMap<Integer, Integer> map = new HashMap<>();
-		PriorityQueue<Node> q = new PriorityQueue<>();
 		int N = Integer.parseInt(br.readLine());
+		int[] numIndex = new int[N + 1];
+
 		st = new StringTokenizer(br.readLine());
-		for (int i = 0, n; i < N; i++) {
+		for (int i = 1, n; i <= N; i++) {
 			n = Integer.parseInt(st.nextToken());
-			map.put(n, i + 1);
+			map.put(n, i);
 		}
 		st = new StringTokenizer(br.readLine());
-		for (int i = 0, n; i < N; i++) {
+		for (int i = 1, n; i <= N; i++) {
 			n = Integer.parseInt(st.nextToken());
-			q.add(new Node(map.get(n), i + 1));
+			numIndex[i] = map.get(n);
 		}
 		SegmentTree tree = new SegmentTree(N);
 		int[] arr = new int[N + 1];
 		tree.init(arr, 1, 1, N);
 
 		long ans = 0;
-		while (!q.isEmpty()) {
-			Node n = q.poll();
-			ans += tree.sum(1, 1, N, n.index2, N);
-			tree.update(1, 1, N, n.index2, 1);
+		for (int i = 1; i <= N; i++) {
+			int num = numIndex[i];
+			ans += tree.sum(1, 1, N, num, N);
+			tree.update(1, 1, N, num, 1);
 		}
 		System.out.println(ans);
 	}
