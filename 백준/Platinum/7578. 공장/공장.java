@@ -117,7 +117,7 @@ public class Main {
 		long ans = 0;
 		for (int i = 1; i <= N; i++) {
 			int num = numIndex[i];
-			ans += tree.sum(1, 1, N, num, N);
+			ans += tree.sum(1, 1, N, num+1, N);
 			tree.update(1, 1, N, num, 1);
 		}
 		System.out.println(ans);
