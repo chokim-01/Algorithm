@@ -60,11 +60,9 @@ public class Main {
 	}
 
 	static void spread() {
-		boolean[][] visit = new boolean[N][M];
 
 		while (true) {
 			boolean flag = false;
-			visit = new boolean[N][M];
 			for (int i = 1; i <= P; i++) {
 				if (q[i].isEmpty())
 					continue;
@@ -77,13 +75,12 @@ public class Main {
 						break;
 					for (int s = 1; s <= size; s++) {
 						Node n = q[i].poll();
-						visit[n.x][n.y] = true;
 						
 						for (int d = 0; d < 4; d++) {
 							int nx = n.x + dxy[d][0];
 							int ny = n.y + dxy[d][1];
 
-							if (!mapChk(nx, ny) || map[nx][ny] != 0 || visit[nx][ny])
+							if (!mapChk(nx, ny) || map[nx][ny] != 0)
 								continue;
 							if (count >= mapSave[nx][ny].y)
 								continue;
@@ -91,7 +88,6 @@ public class Main {
 							mapSave[nx][ny].x = i;
 							mapSave[nx][ny].y = count;
 							flag = true;
-							visit[nx][ny] = true;
 							q[i].add(new Node(nx, ny));
 						}
 					}
