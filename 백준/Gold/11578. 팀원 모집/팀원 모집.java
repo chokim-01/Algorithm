@@ -12,7 +12,7 @@ public class Main {
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
 
-		N = (int) (Math.pow(2, N) - 1);
+		N = (1 << N) - 1;
 
 		int[] bits = new int[M];
 		for (int i = 0; i < M; i++) {
@@ -23,14 +23,16 @@ public class Main {
 		}
 
 		int ans = Integer.MAX_VALUE;
-		for (int i = 0; i < 1 << M; i++) {
-			int correct = 0;
-			int cnt = 0;
+		for (int i = 0, correct, cnt; i < 1 << M; i++) {
+			correct = 0;
+			cnt = 0;
 			for (int j = 0; j < M; j++) {
 				if ((i & 1 << j) > 0) {
 					cnt++;
 					correct = correct | bits[j];
 				}
+				if (cnt >= ans || correct > N)
+					break;
 			}
 			if (correct == N)
 				ans = ans < cnt ? ans : cnt;
