@@ -31,42 +31,59 @@ public class Main {
 		List<Integer> keyList = new ArrayList<>(list.keySet());
 		Collections.sort(keyList);
 		for (int i = 0; i < keyList.size(); i++) {
-			// 현재 축 기준으로 계산
 			int key = keyList.get(i); // y
 
-			Collections.sort(list.get(key));
+			// 기준 축 같은라인
+			sortArrayList(list.get(key), -1);
 			int bef = list.get(key).get(0);
 			for (int j = 1, k, c; j < list.get(key).size(); j++) {
 				k = list.get(key).get(j);
-				c = (k - bef) * (k - bef);
+				c = pow(k - bef);
 				ans = ans < c ? ans : c;
 				bef = k;
 			}
-
-			// choice
-			for (int x : list.get(key)) { // x
+			///
+			// 기준 축과 이후 축 찾기
+			for (int x : list.get(key)) { // 기준 축 x
 				// x y 기준으로 짧은 것.
 				for (int j = i + 1; j < keyList.size(); j++) {
+					// 기준 축 : (x,key) 현재 축 : (?,key2)
 					int key2 = keyList.get(j);
+
+					// y축이 정답보다 길면 방문 x
 					if (key2 - key >= Math.sqrt(ans))
 						break;
 					// next sort
-					Collections.sort(list.get(key2), new Comparator<Integer>() {
+					sortArrayList(list.get(key2), x);
 
-						@Override
-						public int compare(Integer o1, Integer o2) {
-							// TODO Auto-generated method stub
-							// o1 o2 : x
-							return (o1 - x) * (o1 - x) - (o2 - x) * (o2 - x);
-						}
-					});
+					// 정렬 후 front가 짧은 범위 (x,key2)
 					int x2 = list.get(keyList.get(j)).get(0);
-					int len = (key2 - key) * (key2 - key) + (x2 - x) * (x2 - x);
+					int len = pow(key2 - key) + pow(x2 - x);
 					ans = ans < len ? ans : len;
 				}
 			}
+			///
 		}
 		System.out.println(ans);
+	}
 
+	static int pow(int x) {
+		return x * x;
+	}
+
+	static void sortArrayList(ArrayList<Integer> list, int x) {
+		if (x == -1) { // solo
+			Collections.sort(list);
+		} else { // others
+			Collections.sort(list, new Comparator<Integer>() {
+
+				@Override
+				public int compare(Integer o1, Integer o2) {
+					// TODO Auto-generated method stub
+					// o1 o2 : x
+					return (o1 - x) * (o1 - x) - (o2 - x) * (o2 - x);
+				}
+			});
+		}
 	}
 }
