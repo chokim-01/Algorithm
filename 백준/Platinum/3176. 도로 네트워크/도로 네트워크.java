@@ -3,7 +3,6 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -89,7 +88,7 @@ public class Main {
 				a = b;
 				b = tmp;
 			}
-			int jump = 17;
+			int jump = 16;
 			while (nodeDepth[a] != nodeDepth[b]) {
 				if (Math.pow(2, jump) > nodeDepth[a] - nodeDepth[b]) {
 					jump--;
@@ -123,6 +122,5 @@ public class Main {
 
 		bw.flush();
 		bw.close();
-
 	}
 }
