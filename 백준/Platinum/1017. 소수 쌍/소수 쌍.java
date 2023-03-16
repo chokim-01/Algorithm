@@ -54,7 +54,7 @@ public class Main {
 		for (int next : con[now]) {
 			if (prime[nums[now] + nums[next]])
 				continue;
-			if (links[next] == -1 || dfs(links[next])) {
+			if (links[next] == -1 || (links[next] != 0 && dfs(links[next]))) {
 				links[next] = now;
 				return true;
 			}
