@@ -32,7 +32,7 @@ public class Main {
 		int ans = 0;
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < 2; j++) {
-				Arrays.fill(visit, false);
+				visit = new boolean[N];
 				if (dfs(i))
 					ans++;
 			}
