@@ -1,49 +1,49 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.HashMap;
+import java.util.Scanner;
 import java.util.Stack;
-import java.util.StringTokenizer;
 
 public class Main {
-	public static void main(String[] args) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		StringTokenizer st;
 
-		HashMap<Character, Integer> map = new HashMap<>();
-		int N = Integer.parseInt(br.readLine());
-		char[] mathO = br.readLine().toCharArray();
-		char index = 'A';
+	public static void main(String[] args) {
+		Scanner sc = new Scanner(System.in);
+		// A - Z : 26
+		Double[] alphabets = new Double[26];
+		// 피 연산자 개수
+		int N = sc.nextInt();
+
+		// 문자들
+		String str = sc.next();
+
+		// A,B,C,D,E,....
+		for (int i = 0; i < N; i++) {
+			alphabets[i] = sc.nextDouble();
+		}
+
 		Stack<Double> stack = new Stack<>();
-		while (N-- > 0)
-			map.put(index++, Integer.parseInt(br.readLine()));
-
-		for (char m : mathO) {
-			if (m >= 65 && m <= 90)
-				stack.push((double) map.get(m));
-			else {
-				double n = stack.pop();
-				double n2 = stack.pop();
-				switch (m) {
+		for (char c : str.toCharArray()) {
+			if (c >= 65 && c <= 90) { // A - Z이다.
+				stack.push(alphabets[c - 'A']);
+			} else {
+				double number1 = stack.pop();
+				double number2 = stack.pop();
+				double calcNumber = 0;
+				switch (c) {
 				case '*':
-					stack.push(n * n2);
+					calcNumber = number1 * number2;
 					break;
 				case '+':
-					stack.push(n + n2);
+					calcNumber = number1 + number2;
 					break;
 				case '/':
-					stack.push(n2 / n);
+					calcNumber = (double) number2 / number1;
 					break;
 				case '-':
-					stack.push( n2-n);
-					break;
-				default:
+					calcNumber = number2 - number1;
 					break;
 				}
+				stack.push(calcNumber);
 			}
 		}
-		System.out.format("%.2f", stack.peek());
+		System.out.printf("%.2f", stack.pop());
+
 	}
 }
