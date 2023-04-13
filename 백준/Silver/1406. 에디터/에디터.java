@@ -15,8 +15,9 @@ public class Main {
 			left.push(s.charAt(i));
 
 		int t = Integer.parseInt(br.readLine());
-		char o = '.';
-		char c = '.';
+		char o = 0;
+		char c = 0;
+
 		while (t-- > 0) {
 			st = new StringTokenizer(br.readLine());
 			o = st.nextToken().charAt(0);
@@ -34,12 +35,17 @@ public class Main {
 			} else if (!left.isEmpty()) {
 				left.pop();
 			}
+
 		}
+
 		StringBuilder sb = new StringBuilder();
-		while(!left.isEmpty())
+
+		while (!left.isEmpty())
 			right.push(left.pop());
+
 		while (!right.isEmpty())
 			sb.append(right.pop());
+
 		System.out.println(sb.toString());
 	}
 }
