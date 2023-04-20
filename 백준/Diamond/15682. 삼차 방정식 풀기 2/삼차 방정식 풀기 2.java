@@ -75,7 +75,7 @@ public class Main {
 				// 근이 없다
 			}
 			for (BigDecimal s : set)
-				sb.append(String.format("%.9f", s) + " ");
+				sb.append(s + " ");
 
 			sb.append("\n");
 		}
