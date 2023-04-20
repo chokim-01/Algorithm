@@ -1,8 +1,6 @@
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.math.MathContext;
 import java.math.RoundingMode;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.TreeSet;
 
@@ -17,15 +15,10 @@ public class Main {
 
 		StringBuilder sb = new StringBuilder();
 		for (int tc = 1; tc <= T; tc++) {
-//			A = BigDecimal.valueOf(random());
-//			B = BigDecimal.valueOf(random());
-//			C = BigDecimal.valueOf(random());
-//			D = BigDecimal.valueOf(random());
 			A = sc.nextBigDecimal();
 			B = sc.nextBigDecimal();
 			C = sc.nextBigDecimal();
 			D = sc.nextBigDecimal();
-//			System.out.println(A + " " + B + " " + C + " " + D);
 			TreeSet<BigDecimal> set = new TreeSet<>();
 
 			BigDecimal res = BigDecimal.valueOf(-1000000);
@@ -35,6 +28,8 @@ public class Main {
 				BigDecimal left = BigDecimal.valueOf(-1000001);
 				BigDecimal right = BigDecimal.valueOf(1000001);
 				BigDecimal mid = BigDecimal.ZERO;
+				
+				// A가 음수면 변환
 				if (A.compareTo(BigDecimal.ZERO) < 0) {
 					A = A.negate();
 					B = B.negate();
@@ -87,21 +82,7 @@ public class Main {
 		System.out.println(sb);
 	}
 
-	public static int random() {
-		return new Random().nextInt(4000000) - 2000000;
-	}
-
 	public static BigDecimal sqrt(BigDecimal input) {
 		return input.sqrt(MathContext.DECIMAL64);
-	}
-
-	static BigDecimal nr(BigDecimal val) {
-		BigDecimal v2 = val.multiply(val);
-		BigDecimal v3 = v2.multiply(val);
-		BigDecimal top = A.multiply(v3).add(B.multiply(v2)).add(C.multiply(val)).add(D);
-		BigDecimal down = A.multiply(v2).multiply(BigDecimal.valueOf(3))
-				.add(B.multiply(val).multiply(BigDecimal.valueOf(2))).add(C);
-
-		return val.subtract(top.divide(down, MathContext.DECIMAL64));
 	}
 }
