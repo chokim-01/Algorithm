@@ -12,7 +12,7 @@ public class Main {
 		for (int tc = 1; tc <= T; tc++) {
 			BigDecimal c = sc.nextBigDecimal();
 			BigDecimal res = BigDecimal.ONE;
-			MathContext mc = new MathContext(500);
+			MathContext mc = new MathContext(200);
 			int N = 0;
 
 			while (true) {
