@@ -31,10 +31,11 @@ public class Main {
 			ans[0] -= 1;
 			ans[1] += 60;
 		}
-		if (ans[0] >= 24)
-			ans[0] -= 24;
-		if (ans[0] == 0 && ans[1] == 0 && ans[2] == 0)
-			ans[0] = 24;
+		if (ans[0] >= 24) {
+			if (ans[1] != 0 || ans[2] != 0)
+				ans[0] -= 24;
+		}
+
 		int cnt = 0;
 		for (int a : ans) {
 			System.out.printf("%02d", a);
