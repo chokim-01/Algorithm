@@ -14,9 +14,13 @@ class Main {
 		int N = sc.nextInt();
 		list = new TreeSet<>();
 
-		for (int i = 1; i <= 10; i++)
-			for (int j = 0; j < array.length; j++)
+		for (int i = 1; i <= 10; i++) {
+			for (int j = 0; j < array.length; j++) {
 				dfs(j, 0, 0, i);
+				if (N < list.size())
+					break;
+			}
+		}
 
 		Long[] arr = list.stream().toArray(Long[]::new);
 
