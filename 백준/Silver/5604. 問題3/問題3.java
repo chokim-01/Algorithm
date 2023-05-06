@@ -1,4 +1,7 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+import java.util.Stack;
 
 public class Main {
 	static int N;
@@ -6,24 +9,23 @@ public class Main {
 
 	public static void dfs(int sum, List<Integer> choice) {
 		if (sum == N) {
-			ans.add(choice);
+			ans.add(new ArrayList<>(choice));
 			return;
 		}
-		int maxv = (choice.size() == 0) ? N : choice.get(choice.size() - 1);
-		for (int i = 1; i <= maxv; i++) {
-			if (sum + i <= N) {
-				List<Integer> nv = new ArrayList<>(choice);
-				nv.add(i);
-				dfs(sum + i, nv);
-			} else
-				break;
+
+		int max = choice.isEmpty() ? N : choice.get(choice.size() - 1);
+		int range = Math.min(max, N - sum);
+		for (int i = 1; i <= range; i++) {
+			choice.add(i);
+			dfs(sum + i, choice);
+			choice.remove(choice.size() - 1);
 		}
 	}
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		N = sc.nextInt();
-        ans = new Stack<>();
+		ans = new Stack<>();
 
 		dfs(0, new ArrayList<>());
 
