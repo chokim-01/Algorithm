@@ -20,8 +20,7 @@ public class Main {
 	static void dfs(int[] visit, int index) {
 		if (index == M) {
 			for (int num : visit)
-				if (num != 0)
-					sb.append(num + " ");
+				sb.append(num + " ");
 			sb.append("\n");
 			return;
 		}
