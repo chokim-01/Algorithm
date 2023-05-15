@@ -16,11 +16,12 @@ def is_valid():
 def solve(k):
     if k == 3:
         return is_valid()
-    ret = 0
-    ret |= solve(k + 1)
+    if solve(k + 1):
+        return 1
     rectangles[k][0], rectangles[k][1] = rectangles[k][1], rectangles[k][0]
-    ret |= solve(k + 1)
-    return ret
+    if solve(k + 1):
+        return 1
+    return 0
 
 
 print(solve(0))
