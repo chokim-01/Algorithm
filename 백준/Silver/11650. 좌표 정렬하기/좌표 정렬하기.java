@@ -18,9 +18,18 @@ public class Main {
 			arr[index][0] = Integer.parseInt(st.nextToken());
 			arr[index++][1] = Integer.parseInt(st.nextToken());
 		}
-		int[][] result = Arrays.stream(arr).sorted(Comparator.comparingInt((int[] a) -> a[0]).thenComparing(b -> b[1]))
-				.toArray(int[][]::new);
-		for (int[] re : result) {
+		Arrays.sort(arr, new Comparator<int[]>() {
+
+			@Override
+			public int compare(int[] o1, int[] o2) {
+				// TODO Auto-generated method stub
+				if (o1[0] == o2[0])
+					return o1[1] - o2[1];
+				return o1[0] - o2[0];
+			}
+		});
+
+		for (int[] re : arr) {
 			for (int r : re) {
 				sb.append(r + " ");
 			}
