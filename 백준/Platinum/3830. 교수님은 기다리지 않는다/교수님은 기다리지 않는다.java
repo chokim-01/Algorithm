@@ -6,6 +6,7 @@ import java.util.StringTokenizer;
 public class Main {
 	static int N, M;
 	static long[][] parent;
+	static int rank[];
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -18,6 +19,7 @@ public class Main {
 			if (N == 0)
 				break;
 			parent = new long[N + 1][2];
+			rank = new int[N + 1];
 			for (int i = 1; i < parent.length; i++)
 				parent[i][0] = i;
 
@@ -53,8 +55,15 @@ public class Main {
 
 		if (fa == fb)
 			return;
-		parent[fb][1] = parent[a][1] - parent[b][1] + w;
-		parent[fb][0] = fa;
+		if (rank[fa] >= rank[fb]) {
+			parent[fb][0] = fa;
+			parent[fb][1] = parent[a][1] - parent[b][1] + w;
+			if (rank[fa] == rank[fb])
+				rank[fa]++;
+		} else {
+			parent[fa][1] = parent[b][1] - parent[a][1] - w;
+			parent[fa][0] = fb;
+		}
 	}
 
 	static int find(int a) {
