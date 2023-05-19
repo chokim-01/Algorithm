@@ -8,7 +8,7 @@
 
 ### 분류
 
-자료 구조(data_structures), 덱(deque), 우선순위 큐(priority_queue)
+자료 구조, 덱, 우선순위 큐
 
 ### 문제 설명
 
