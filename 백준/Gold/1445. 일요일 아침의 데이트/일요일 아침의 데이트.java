@@ -45,13 +45,26 @@ public class Main {
 
 		map = new char[N][M];
 		visit = new boolean[N][M];
-
+		boolean[][] choice = new boolean[N][M];
 		int[] start = new int[2];
 		for (int i = 0; i < N; i++) {
 			char[] cs = map[i] = br.readLine().toCharArray();
 			for (int j = 0; j < M; j++) {
 				if (cs[j] == 'S')
 					start = new int[] { i, j };
+			}
+		}
+		for (int i = 0; i < N; i++) {
+			for (int j = 0; j < M; j++) {
+				for (int d = 0; d < 4; d++) {
+					int nx = i + dxy[d][0];
+					int ny = j + dxy[d][1];
+
+					if (!mapChk(nx, ny) || map[nx][ny] != 'g')
+						continue;
+					choice[i][j] = true;
+					break;
+				}
 			}
 		}
 
@@ -76,16 +89,8 @@ public class Main {
 				int cnt2 = now.cnt2;
 				if (map[nx][ny] == 'g')
 					cnt1++;
-				else if (map[nx][ny] == '.')
-					for (int dd = 0; dd < 4; dd++) {
-						int nnx = nx + dxy[dd][0];
-						int nny = ny + dxy[dd][1];
-
-						if (!mapChk(nnx, nny) || map[nnx][nny] != 'g')
-							continue;
-						cnt2++;
-						break;
-					}
+				else if (map[nx][ny] == '.' && choice[nx][ny])
+					cnt2++;
 				q.add(new Node(nx, ny, cnt1, cnt2));
 			}
 		}
