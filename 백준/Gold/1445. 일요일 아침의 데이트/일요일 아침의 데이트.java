@@ -1,6 +1,8 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
@@ -49,25 +51,19 @@ public class Main {
 		boolean[][] choice = new boolean[N][M];
 		byte[] start = new byte[2];
 		for (byte i = 0; i < N; ++i) {
-			String s = br.readLine();
+			map[i] = br.readLine().toCharArray();
 			for (byte j = 0; j < M; ++j) {
-				map[i][j] = s.charAt(j);
-				if (map[i][j] == 'S')
-					start = new byte[] { i, j };
-			}
-		}
-		for (byte i = 0; i < N; ++i) {
-			for (byte j = 0; j < M; ++j) {
-				if (map[i][j] != 'g')
-					continue;
-				for (byte d = 0; d < 4; ++d) {
-					byte nx = (byte) (i + dxy[d][0]);
-					byte ny = (byte) (j + dxy[d][1]);
+				if (map[i][j] == 'g') {
+					for (byte d = 0; d < 4; ++d) {
+						byte nx = (byte) (i + dxy[d][0]);
+						byte ny = (byte) (j + dxy[d][1]);
 
-					if (!mapChk(nx, ny))
-						continue;
-					choice[nx][ny] = true;
-				}
+						if (!mapChk(nx, ny))
+							continue;
+						choice[nx][ny] = true;
+					}
+				} else if (map[i][j] == 'S')
+					start = new byte[] { i, j };
 			}
 		}
 
@@ -83,12 +79,14 @@ public class Main {
 				answer = now;
 				break;
 			}
+
 			for (byte d = 0; d < 4; ++d) {
 				byte nx = (byte) (now.x + dxy[d][0]);
 				byte ny = (byte) (now.y + dxy[d][1]);
 
 				if (!mapChk(nx, ny) || visit[nx][ny])
 					continue;
+
 				visit[nx][ny] = true;
 				cnt1 = now.cnt1;
 				cnt2 = now.cnt2;
@@ -99,7 +97,9 @@ public class Main {
 				q.add(new Node(nx, ny, cnt1, cnt2));
 			}
 		}
-		System.out.println(answer.cnt1 + " " + answer.cnt2);
+		StringBuilder sb = new StringBuilder();
+		sb.append(answer.cnt1).append(" ").append(answer.cnt2);
+		System.out.println(sb);
 	}
 
 	static boolean mapChk(byte x, byte y) {
