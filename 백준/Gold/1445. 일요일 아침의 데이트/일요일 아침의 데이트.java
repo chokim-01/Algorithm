@@ -5,14 +5,15 @@ import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
-	static int N, M;
+	static byte N, M;
 	static char[][] map;
 	static boolean[][] visit;
 
 	static class Node implements Comparable<Node> {
-		int x, y, cnt1, cnt2;
+		byte x, y;
+		int cnt1, cnt2;
 
-		public Node(int x, int y, int cnt1, int cnt2) {
+		public Node(byte x, byte y, int cnt1, int cnt2) {
 			// TODO Auto-generated constructor stub
 			this.x = x;
 			this.y = y;
@@ -34,36 +35,38 @@ public class Main {
 		}
 	}
 
-	static int dxy[][] = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+	static byte dxy[][] = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
+		N = Byte.parseByte(st.nextToken());
+		M = Byte.parseByte(st.nextToken());
 
 		map = new char[N][M];
 		visit = new boolean[N][M];
 		boolean[][] choice = new boolean[N][M];
-		int[] start = new int[2];
-		for (int i = 0; i < N; i++) {
-			char[] cs = map[i] = br.readLine().toCharArray();
-			for (int j = 0; j < M; j++) {
-				if (cs[j] == 'S')
-					start = new int[] { i, j };
+		byte[] start = new byte[2];
+		for (byte i = 0; i < N; ++i) {
+			String s = br.readLine();
+			for (byte j = 0; j < M; ++j) {
+				map[i][j] = s.charAt(j);
+				if (map[i][j] == 'S')
+					start = new byte[] { i, j };
 			}
 		}
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++) {
-				for (int d = 0; d < 4; d++) {
-					int nx = i + dxy[d][0];
-					int ny = j + dxy[d][1];
+		for (byte i = 0; i < N; ++i) {
+			for (byte j = 0; j < M; ++j) {
+				if (map[i][j] != 'g')
+					continue;
+				for (byte d = 0; d < 4; ++d) {
+					byte nx = (byte) (i + dxy[d][0]);
+					byte ny = (byte) (j + dxy[d][1]);
 
-					if (!mapChk(nx, ny) || map[nx][ny] != 'g')
+					if (!mapChk(nx, ny))
 						continue;
-					choice[i][j] = true;
-					break;
+					choice[nx][ny] = true;
 				}
 			}
 		}
@@ -72,21 +75,23 @@ public class Main {
 		visit[start[0]][start[1]] = true;
 		q.add(new Node(start[0], start[1], 0, 0));
 		Node answer = null;
+		int cnt1 = 0;
+		int cnt2 = 0;
 		while (!q.isEmpty()) {
 			Node now = q.poll();
 			if (map[now.x][now.y] == 'F') {
 				answer = now;
 				break;
 			}
-			for (int d = 0; d < 4; d++) {
-				int nx = now.x + dxy[d][0];
-				int ny = now.y + dxy[d][1];
+			for (byte d = 0; d < 4; ++d) {
+				byte nx = (byte) (now.x + dxy[d][0]);
+				byte ny = (byte) (now.y + dxy[d][1]);
 
 				if (!mapChk(nx, ny) || visit[nx][ny])
 					continue;
 				visit[nx][ny] = true;
-				int cnt1 = now.cnt1;
-				int cnt2 = now.cnt2;
+				cnt1 = now.cnt1;
+				cnt2 = now.cnt2;
 				if (map[nx][ny] == 'g')
 					cnt1++;
 				else if (map[nx][ny] == '.' && choice[nx][ny])
@@ -97,7 +102,7 @@ public class Main {
 		System.out.println(answer.cnt1 + " " + answer.cnt2);
 	}
 
-	static boolean mapChk(int x, int y) {
+	static boolean mapChk(byte x, byte y) {
 		if (x < 0 || y < 0 || x >= N || y >= M)
 			return false;
 		return true;
