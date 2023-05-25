@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.StringTokenizer;
 import java.util.stream.Stream;
 
@@ -10,7 +9,6 @@ public class Main {
 	static int N, M;
 	static int[] arr;
 	static StringBuilder sb;
-	static LinkedHashSet<String> set;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -20,37 +18,30 @@ public class Main {
 
 		arr = Stream.of(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 		Arrays.sort(arr);
-		set = new LinkedHashSet<>();
 		sb = new StringBuilder();
 		dfs(0, new int[M], new boolean[N]);
-		
-		set.forEach(k -> {
-			for (char c : k.toCharArray())
-				if (c == '|')
-					sb.append(" ");
-				else
-					sb.append(c);
-			sb.append("\n");
-		});
+
 		System.out.println(sb);
 	}
 
 	static void dfs(int index, int[] choice, boolean[] visit) {
 		if (index == M) {
-			set.add(Arrays.toString(choice).replaceAll("[^0-9 ]", "").toString().replace(" ", "|"));
+			for (int c : choice)
+				sb.append(c + " ");
+			sb.append("\n");
 
 			return;
 		}
-
+		int before = 0;
 		for (int i = 0; i < N; i++) {
-			if (visit[i])
+			if (visit[i] || before == arr[i])
 				continue;
 			visit[i] = true;
 			choice[index] = arr[i];
+			before = arr[i];
 			dfs(index + 1, choice, visit);
 			visit[i] = false;
 		}
-
 	}
 
 	static void swap(int a, int b) {
