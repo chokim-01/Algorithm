@@ -84,35 +84,9 @@ public class Main {
 	static void makeMeasure() {
 		N = 1000001;
 		ans = new int[N];
-		int[] measure = new int[N];
-		int[] measureCounts = new int[N];
-
-		// che
-		N -= 1;
-		for (int i = 1; i <= N; i++)
-			measure[i] = i;
-		for (int i = 2; i <= N; i++) {
-			if (measure[i] == i) {
-				for (int j = 2; i * j <= N; j++) {
-					if (measure[i * j] == i * j)
-						measure[i * j] = i;
-				}
-			}
-		}
-		ans[1] = 1;
-		for (int i = 2; i <= N; i++) {
-			if (measure[i] == i) { // 자기자신
-				ans[i] = 2;
-				measureCounts[i]++;
-			} else { // 약수 개수 구하기
-				int p = measure[i];
-				int m = i / p;
-				if (p != measure[m])
-					measureCounts[i]++;
-				else
-					measureCounts[i] = measureCounts[m] + 1; // 이전거.
-				int a = measureCounts[i];
-				ans[i] = (ans[m] / a) * (a + 1);
+		for (int i = 1; i <= 1000000; ++i) {
+			for (int j = i; j <= 1000000; j += i) {
+				ans[j]++;
 			}
 		}
 	}
