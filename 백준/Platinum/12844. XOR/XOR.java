@@ -65,11 +65,8 @@ public class Main {
 		if (b < l || r < a)
 			return;
 		if (a <= l && r <= b) {
-			tree[node] ^= val * ((r - l + 1) % 2);
-			if (l != r) {
-				lazy[node << 1] ^= val;
-				lazy[(node << 1) + 1] ^= val;
-			}
+			lazy[node] ^= val;
+			propagate(node, l, r);
 			return;
 		}
 		int mid = (l + r) / 2;
