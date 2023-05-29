@@ -4,7 +4,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class Main {
@@ -15,23 +14,14 @@ public class Main {
 	static BiFunction<Integer, Integer, Boolean> chk = (x, y) -> x >= 0 && x < N && y >= 0 && y < N;
 
 	static class Node {
-		int x, y, min, max;
+		int x, y;
 
 		public Node(int x, int y) {
 			// TODO Auto-generated constructor stub
 			this.x = x;
 			this.y = y;
-			this.min = map[x][y];
-			this.max = map[x][y];
 		}
 
-		public Node(int x, int y, int mi, int ma) {
-			// TODO Auto-generated constructor stub
-			this.x = x;
-			this.y = y;
-			this.min = mi;
-			this.max = ma;
-		}
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -82,15 +72,12 @@ public class Main {
 					int ny = n.y + d[1];
 					if (!chk.apply(nx, ny) || visit[nx][ny])
 						continue;
-					int max = n.max < map[nx][ny] ? map[nx][ny] : n.max;
-					int min = n.min < map[nx][ny] ? n.min : map[nx][ny];
-					if (max - min > dist)
-						continue;
-					visit[nx][ny] = true;
+
 					if (nx == N - 1 && ny == N - 1)
 						return true;
+					visit[nx][ny] = true;
 
-					q.add(new Node(nx, ny, min, max));
+					q.add(new Node(nx, ny));
 				}
 			}
 		}
