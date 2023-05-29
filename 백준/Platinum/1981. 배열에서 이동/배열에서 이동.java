@@ -4,6 +4,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class Main {
@@ -12,6 +14,7 @@ public class Main {
 	static boolean[][] visit;
 	static int[][] dxy = { { -1, 0 }, { 1, 0 }, { 0, 1 }, { 0, -1 } };
 	static BiFunction<Integer, Integer, Boolean> chk = (x, y) -> x >= 0 && x < N && y >= 0 && y < N;
+	static Consumer<Integer> out = x -> System.out.println(x);
 
 	static class Node {
 		int x, y;
@@ -25,26 +28,26 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws IOException {
-		input();
-		System.out.println(binSearch());
+		input.accept(new BufferedReader(new InputStreamReader(System.in)));
+		out.accept(binSearch.apply(bfs));
 	}
 
-	static int binSearch() {
+	static Function<Function<Integer, Boolean>, Integer> binSearch = (bfs) -> {
 		int ret = 0;
 		int l = 0;
 		int r = 200;
 		while (l <= r) {
 			int mid = (l + r) / 2;
-			if (bfs(mid)) {
+			if (bfs.apply(mid)) {
 				ret = mid;
 				r = mid - 1;
 			} else
 				l = mid + 1;
 		}
 		return ret;
-	}
+	};
 
-	static boolean bfs(int dist) {
+	static Function<Integer, Boolean> bfs = (dist) -> {
 		Queue<Node> q = new ArrayDeque<>();
 		// 3 2
 		// 0 3 1 4 2 5
@@ -82,13 +85,17 @@ public class Main {
 			}
 		}
 		return false;
-	}
+	};
 
-	static void input() throws IOException {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		N = Integer.parseInt(br.readLine());
-		map = new int[N][N];
-		for (int i = 0; i < N; i++)
-			map[i] = Stream.of(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-	}
+	static Consumer<BufferedReader> input = (br) -> {
+		try {
+			N = Integer.parseInt(br.readLine());
+			map = new int[N][N];
+			for (int i = 0; i < N; i++)
+				map[i] = Stream.of(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+		} catch (NumberFormatException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	};
 }
