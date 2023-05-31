@@ -1,30 +1,13 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.PriorityQueue;
-import java.util.StringTokenizer;
+import java.util.Collections;
 import java.util.stream.Stream;
 
 public class Main {
 	static int N;
-	static PriorityQueue<Node> numbers;
+	static int[] numbers;
 	static int[] tree;
-
-	static class Node implements Comparable<Node> {
-		int n, i;
-
-		public Node(int n, int i) {
-			// TODO Auto-generated constructor stub
-			this.n = n;
-			this.i = i;
-		}
-
-		@Override
-		public int compareTo(Main.Node o) {
-			// TODO Auto-generated method stub
-			return this.n - o.n;
-		}
-	}
 
 	public static void main(String[] args) throws IOException {
 		input();
@@ -35,11 +18,10 @@ public class Main {
 
 	static long solve() {
 		long ret = 0;
-		while (!numbers.isEmpty()) {
-			Node n = numbers.poll();
+		for (int i = numbers.length - 1; i >= 0; i--) {
 
-			ret += query(n.i);
-			update(n.i);
+			ret += query(numbers[i]);
+			update(numbers[i]);
 		}
 
 		return ret;
@@ -50,13 +32,12 @@ public class Main {
 		do
 			tree[id] += 1;
 		while ((id >>= 1) != 0);
-
 	}
 
-	static int query(int l) {
+	static int query(int r) {
 		int ret = 0;
-		l += N;
-		int r = tree.length;
+		int l = N;
+		r += N;
 		for (; l < r; l >>= 1, r >>= 1) {
 			if ((l & 1) == 1) {
 				ret += tree[l];
@@ -72,14 +53,9 @@ public class Main {
 
 	static void input() throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-		N = Integer.parseInt(br.readLine());
-
-		numbers = new PriorityQueue<>();
-		st = new StringTokenizer(br.readLine());
-		for (int i = 0; i < N; i++)
-			numbers.add(new Node(Integer.parseInt(st.nextToken()), i));
-
+		br.readLine();
+		N = 1000001;
+		numbers = Stream.of(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 	}
 
 }
