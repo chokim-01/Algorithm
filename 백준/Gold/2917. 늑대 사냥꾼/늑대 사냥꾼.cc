@@ -46,10 +46,10 @@ void treeMapSet() {
             int ny = n.y + dxy[i][1];
             if (nx < 0 || ny < 0 || nx >= N || ny >= M)
                 continue;
-            if (tMap[nx][ny] != INT_MAX)
+            if (tMap[nx][ny] <= n.save+1)
                 continue;
             tMap[nx][ny] = n.save + 1;
-            q.push(Node(nx, ny, tMap[nx][ny]));
+            q.push(Node(nx, ny, n.save + 1));
         }
     }
 }
@@ -58,22 +58,20 @@ int solve() {
     priority_queue<Node> q;
 
     q.push(Node(s[0], s[1], tMap[s[0]][s[1]]));
-    
+    tMap[s[0]][s[1]] = -1;
     while (!q.empty()) {
         Node n = q.top();
         q.pop();
-        if (tMap[n.x][n.y] == -1)
-            continue;
-        tMap[n.x][n.y] = -1;
-        if (n.x == e[0] && n.y == e[1])
-            return n.save;
         for (int i = 0; i < dxy.size(); i++) {
             int nx = n.x + dxy[i][0];
             int ny = n.y + dxy[i][1];
             if (nx < 0 || ny < 0 || nx >= N || ny >= M || tMap[nx][ny] == -1)
                 continue;
-            
-            q.push(Node(nx, ny, min(n.save,tMap[nx][ny])));
+            int nsave = min(n.save, tMap[nx][ny]);
+            tMap[nx][ny] = -1;
+            if (nx == e[0] && ny == e[1])
+                return nsave;
+            q.push(Node(nx, ny, nsave));
         }
     }
     return 0;
