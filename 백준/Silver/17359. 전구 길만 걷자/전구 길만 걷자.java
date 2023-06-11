@@ -26,6 +26,8 @@ public class Main {
 	}
 
 	static void dfs(int idx, int cnt, char bef) {
+		if(cnt >= min)
+			return;
 		if (idx == sec.length) {
 			min = cnt < min ? cnt : min;
 			return;
