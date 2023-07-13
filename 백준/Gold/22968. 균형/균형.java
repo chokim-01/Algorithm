@@ -17,12 +17,7 @@ public class Main {
 		StringBuilder sb = new StringBuilder();
 		while (N-- > 0) {
 			int n = Integer.parseInt(br.readLine());
-			int ans = 0;
-			if (tree.containsKey(n))
-				ans = tree.get(n);
-			else
-				ans = tree.lowerEntry(n).getValue();
-			sb.append(ans).append("\n");
+			sb.append(tree.lowerEntry(n + 1).getValue()).append("\n");
 		}
 		System.out.println(sb);
 	}
