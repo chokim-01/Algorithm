@@ -11,6 +11,7 @@ public class Main {
 		int T = Integer.parseInt(br.readLine());
 		int[] nS;
 		int[] mS;
+		StringBuilder sb = new StringBuilder();
 		while (T-- > 0) {
 			st = new StringTokenizer(br.readLine());
 			int nC = Integer.parseInt(st.nextToken());
@@ -21,9 +22,9 @@ public class Main {
 				nS[nC] = Integer.parseInt(br.readLine());
 			while (mC-- > 0)
 				mS[mC] = Integer.parseInt(br.readLine());
-			System.out.println(binSearch(nS, mS) + ".0");
-
+			sb.append(binSearch(nS, mS)).append(".0").append("\n");
 		}
+		System.out.println(sb);
 	}
 
 	static int binSearch(int[] nS, int[] mS) {
