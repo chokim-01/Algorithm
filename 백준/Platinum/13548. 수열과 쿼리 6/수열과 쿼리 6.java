@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.StringTokenizer;
@@ -36,7 +35,7 @@ public class Main {
 
 		N = Integer.parseInt(br.readLine());
 		cnt = new int[100001];
-		cnt2 = new int[100002];
+		cnt2 = new int[100001];
 		int[] nums = new int[N + 1];
 
 		mN = (int) Math.sqrt(N);
@@ -61,31 +60,26 @@ public class Main {
 
 		int[] ans = new int[M];
 
-		Node bef = new Node(1, 0, 0);
-		int c = 0;
+		Node bef = new Node(1, 1, 0);
+		int c = f1(nums[1]);
 
 		while (!q.isEmpty()) {
 			Node now = q.poll();
-			while (now.x < bef.x) {
+			while (now.x < bef.x)
 				// add
 				c = f1(nums[--bef.x]);
-			}
 
-			while (now.x > bef.x) {
+			while (now.x > bef.x)
 				// del
 				c = f2(nums[bef.x++]);
-			}
 
-			while (now.y < bef.y) {
+			while (now.y < bef.y)
 				// del
 				c = f2(nums[bef.y--]);
-			}
 
-			while (now.y > bef.y) {
+			while (now.y > bef.y)
 				// add
 				c = f1(nums[++bef.y]);
-			}
-			bef = now;
 
 			ans[now.index] = c;
 		}
@@ -100,15 +94,15 @@ public class Main {
 			cnt2[cnt[n] - 1]--;
 			cnt2[cnt[n]]++;
 		}
+
 		return max = max < cnt[n] ? cnt[n] : max;
 	}
 
 	static int f2(int n) {
 		if (--cnt[n] >= 0) {
-			cnt2[cnt[n] + 1]--;
-			cnt2[cnt[n]]++;
-			if (cnt2[cnt[n] + 1] == 0 && cnt[n] + 1 == max)
+			if (--cnt2[cnt[n] + 1] == 0 && cnt[n]+1 == max)
 				max--;
+			cnt2[cnt[n]]++;
 		}
 		return max;
 	}
