@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 import java.util.stream.Stream;
 
@@ -22,7 +23,7 @@ public class Main {
 		}
 
 		long l = 1;
-		long r = 30 * 2000000000L;
+		long r = 30L * N;
 		while (l < r) {
 			long mid = (l + r) / 2;
 			if (possible(mid) >= N)
@@ -45,5 +46,4 @@ public class Main {
 			res += m / lo + 1;
 		return res;
 	}
-
 }
