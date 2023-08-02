@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.StringTokenizer;
-import java.util.stream.Stream;
 
 public class Main {
 	static int N, K;
@@ -15,7 +14,7 @@ public class Main {
 		N = Integer.parseInt(st.nextToken());
 		K = Integer.parseInt(st.nextToken());
 
-		L = Stream.of(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+		L = Arrays.stream(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
 		if (N <= K) {
 			System.out.println(N);
