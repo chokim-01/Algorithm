@@ -22,28 +22,19 @@ public class Main {
 		}
 
 		long l = 1;
-		long r, min;
-		r = min = 30 * 2000000000L;
-		while (l <= r) {
+		long r = 30 * 2000000000L;
+		while (l < r) {
 			long mid = (l + r) / 2;
-			long p = possible(mid);
-			if (p >= N) {
-				r = mid - 1;
-				min = min > mid ? mid : min;
-			} else {
+			if (possible(mid) >= N)
+				r = mid;
+			else
 				l = mid + 1;
-			}
 		}
-		long c = possible(min - 1);
+		long c = possible(r - 1);
 		int ans = 0;
-		for (int i = 0; i < K; i++) {
-			if (min % L[i] == 0) {
-				if (++c == N) {
-					ans = i + 1;
-					break;
-				}
-			}
-		}
+		for (int i = 0; i < K && c != N; i++)
+			if (r % L[i] == 0 && ++c == N)
+				ans = i + 1;
 		System.out.println(ans);
 
 	}
@@ -51,7 +42,7 @@ public class Main {
 	static long possible(long m) {
 		long res = 0;
 		for (int lo : L)
-			res += (m / lo) + 1;
+			res += m / lo + 1;
 		return res;
 	}
 
