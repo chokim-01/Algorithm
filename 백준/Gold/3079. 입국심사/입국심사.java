@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.math.BigInteger;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -17,14 +16,15 @@ public class Main {
 		for (int i = 0; i < N; i++)
 			L[i] = Integer.parseInt(br.readLine());
 
-		BigInteger l = BigInteger.ONE;
-		BigInteger r = l.multiply(BigInteger.TEN).pow(18);
-		while (l.compareTo(r) < 0) {
-			long mid = l.add(r).divide(BigInteger.TWO).longValue();
+		long l = 1;
+		long r = 1000000000 * 1000000000L;
+
+		while (l < r) {
+			long mid = (l + r) / 2;
 			if (possible(mid) >= M)
-				r = BigInteger.valueOf(mid);
+				r = mid;
 			else
-				l = BigInteger.valueOf(mid + 1);
+				l = mid + 1;
 		}
 		System.out.println(r);
 	}
@@ -33,9 +33,9 @@ public class Main {
 		long res = 0;
 		for (int lo : L) {
 			res += m / lo;
-			if (res < 0)
-				return M;
-		}
+            if(res < 0)
+                return M;
+        }
 		return res;
 	}
 }
