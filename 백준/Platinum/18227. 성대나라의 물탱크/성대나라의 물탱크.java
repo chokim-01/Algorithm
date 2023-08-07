@@ -2,14 +2,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
 	static int N, C;
 	static int[] in, out, depth;
 	static long[] tree;
-	static boolean[] visit;
 	static ArrayList<Integer>[] link;
 
 	public static void main(String[] args) throws IOException {
@@ -23,12 +21,10 @@ public class Main {
 			st = new StringTokenizer(br.readLine());
 			int q = Integer.parseInt(st.nextToken());
 			int a = Integer.parseInt(st.nextToken());
-			if (q == 1) {
+			if (q == 1)
 				update(a);
-			} else {
-//				System.out.println(query(a));
+			else
 				sb.append(query(a)).append("\n");
-			}
 		}
 		System.out.println(sb);
 	}
@@ -41,7 +37,6 @@ public class Main {
 	}
 
 	static long query(int idx) {
-		int val = depth[idx];
 		long ret = 0;
 		int l = in[idx] + N - 1;
 		int r = out[idx] + N;
@@ -51,7 +46,7 @@ public class Main {
 			if ((r & 1) == 1)
 				ret += tree[--r];
 		}
-		return ret * val;
+		return ret * depth[idx];
 	}
 
 	static void makeTree(BufferedReader br) throws IOException {
@@ -63,7 +58,6 @@ public class Main {
 		out = new int[N + 1];
 		depth = new int[N + 1];
 		tree = new long[N << 1];
-		visit = new boolean[N + 1];
 
 		link = new ArrayList[N + 1];
 		for (int i = 1; i <= N; i++)
@@ -76,7 +70,6 @@ public class Main {
 			link[b].add(a);
 		}
 		depth[C] = 1;
-		visit[C] = true;
 		oiler(C);
 	}
 
@@ -85,10 +78,9 @@ public class Main {
 	static void oiler(int now) {
 		in[now] = ++cnt;
 		for (int next : link[now]) {
-			if (visit[next])
+			if (depth[next] != 0)
 				continue;
 			depth[next] = depth[now] + 1;
-			visit[next] = true;
 			oiler(next);
 		}
 		out[now] = cnt;
