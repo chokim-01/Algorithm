@@ -28,7 +28,7 @@ public class Main {
 				BigDecimal left = BigDecimal.valueOf(-1000001);
 				BigDecimal right = BigDecimal.valueOf(1000001);
 				BigDecimal mid = BigDecimal.ZERO;
-				
+
 				// A가 음수면 변환
 				if (A.compareTo(BigDecimal.ZERO) < 0) {
 					A = A.negate();
@@ -61,7 +61,7 @@ public class Main {
 			if (compare == 1) {
 				// 서로 다른 두 근
 				// route
-				BigDecimal route = sqrt(calc);
+				BigDecimal route = sqrt(calc,BigDecimal.ONE,MathContext.DECIMAL64);
 				BigDecimal r1 = route.add(b.negate()).divide(BigDecimal.valueOf(2).multiply(a), MathContext.DECIMAL64);
 				BigDecimal r2 = route.negate().add(b.negate()).divide(BigDecimal.valueOf(2).multiply(a),
 						MathContext.DECIMAL64);
@@ -82,7 +82,19 @@ public class Main {
 		System.out.println(sb);
 	}
 
-	public static BigDecimal sqrt(BigDecimal input) {
-		return input.sqrt(MathContext.DECIMAL64);
+	public static BigDecimal sqrt(BigDecimal value, BigDecimal guess, MathContext mathContext) {
+		BigDecimal two = new BigDecimal("2");
+		int maxIterations = 100; // 원하는 최대 반복 횟수
+
+		for (int i = 0; i < maxIterations; i++) {
+			BigDecimal newGuess = value.divide(guess, mathContext).add(guess).divide(two, mathContext);
+
+			if (newGuess.equals(guess))
+				break;
+
+			guess = newGuess;
+		}
+
+		return guess;
 	}
 }
