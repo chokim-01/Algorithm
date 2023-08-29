@@ -11,9 +11,9 @@ import java.util.StringTokenizer;
 public class Main {
 	static int T, N, M;
 	static char[][] map;
-	static List<Node> prisoner;
-	static int[][][] countOfMap;
 	static int[][] dxy = { { -1, 0 }, { 1, 0 }, { 0, -1 }, { 0, 1 } };
+	static int[][][] countOfMap;
+	static List<Node> prisoner;
 
 	static class Node {
 		int x, y, cnt;
@@ -30,7 +30,6 @@ public class Main {
 			this.y = y;
 			this.cnt = c;
 		}
-
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -66,11 +65,9 @@ public class Main {
 		int ret = Integer.MAX_VALUE;
 		for (int j = 1; j <= N; j++) {
 			for (int k = 1; k <= M; k++) {
-				int c = 0;
+				int c = map[j][k] == '#' ? -2 : 0;
 				for (int i = 0; i < 3; i++)
 					c += countOfMap[i][j][k];
-				if (map[j][k] == '#')
-					c -= 2;
 				ret = ret < c ? ret : c;
 			}
 		}
