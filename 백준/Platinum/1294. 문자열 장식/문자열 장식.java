@@ -27,21 +27,11 @@ public class Main {
 					continue;
 				return this.s.charAt(i) - o.s.charAt(i);
 			}
-			if (this.s.length() == 0)
-				return 1;
-			if (o.s.length() == 0)
-				return -1;
 			if (this.s.length() < o.s.length())
 				return 1;
 
 			return -1;
 		}
-
-		@Override
-		public String toString() {
-			return this.s.toString();
-		}
-
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -61,8 +51,10 @@ public class Main {
 		while (max-- > 0) {
 			Node n = list.poll();
 			ans.append(n.s.charAt(0));
-			n.s.delete(0, 1);
-			list.add(n);
+			if (n.s.length() > 1) {
+				n.s.delete(0, 1);
+				list.add(n);
+			}
 		}
 		System.out.println(ans);
 
