@@ -1,8 +1,8 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -49,7 +49,7 @@ public class Main {
 		StringTokenizer st;
 		N = Integer.parseInt(br.readLine());
 		int max = 0;
-		ArrayList<Node> list = new ArrayList<>();
+		PriorityQueue<Node> list = new PriorityQueue<>();
 		for (int i = 0; i < N; i++) {
 			Node n = new Node(br.readLine(), i);
 			list.add(n);
@@ -59,10 +59,10 @@ public class Main {
 		StringBuilder ans = new StringBuilder();
 
 		while (max-- > 0) {
-			Collections.sort(list);
-			Node n = list.get(0);
+			Node n = list.poll();
 			ans.append(n.s.charAt(0));
 			n.s.delete(0, 1);
+			list.add(n);
 		}
 		System.out.println(ans);
 
