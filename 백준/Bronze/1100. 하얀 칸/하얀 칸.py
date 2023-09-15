@@ -1,0 +1,1 @@
+print(sum(1 for t in range(8) for i, l in enumerate(input()) if i % 2 == t % 2 and l == 'F'))
