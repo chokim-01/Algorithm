@@ -51,11 +51,11 @@ public class Main {
 			return;
 		}
 
-		dfs(0, 0, new boolean[aList.size()]);
+		dfs(0, 0);
 		System.out.println(ans);
 	}
 
-	static void dfs(int idx, int cnt, boolean[] v) {
+	static void dfs(int idx, int cnt) {
 		if (cnt == K) {
 			int a = 0;
 			outer: for (String s : strs) {
@@ -67,13 +67,13 @@ public class Main {
 			ans = a < ans ? ans : a;
 			return;
 		}
-		if (idx == v.length)
+		if (idx == alphabets.size())
 			return;
 
 		char c = alphabets.get(idx);
 		exist.add(c);
-		dfs(idx + 1, cnt + 1, v);
+		dfs(idx + 1, cnt + 1);
 		exist.remove(c);
-		dfs(idx + 1, cnt, v);
+		dfs(idx + 1, cnt);
 	}
 }
