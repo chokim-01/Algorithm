@@ -33,7 +33,6 @@ public class Main {
 			int ret = arr[1];
 			arr[1] = arr[this.size];
 			arr[this.size--] = Integer.MAX_VALUE;
-
 			int now = 1;
 			while ((now << 1) <= this.size) {
 				int left = now << 1;
@@ -72,7 +71,6 @@ public class Main {
 				ans.append("\n");
 			} else
 				tr.add(num);
-
 		}
 		System.out.println(ans);
 	}
