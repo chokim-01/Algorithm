@@ -35,32 +35,25 @@ public class Main {
 			for (int j = i; j < i + tot; j++)
 				if (--al[s.charAt(j) - 'a'] < 0)
 					continue outer;
-			dfs(0, tot, new StringBuilder(s.substring(i, i + tot)), 0);
+			dfs(0, tot, new StringBuilder(s.substring(i, i + tot)));
 		}
-
 		return save.size();
 	}
 
-	static void dfs(int s, int e, StringBuilder sb, int seq) {
+	static void dfs(int s, int e, StringBuilder sb) {
 		if (e - s == 1) {
 			save.add(sb.toString());
 			return;
 		}
 		int mid = (s + e) >> 1;
-		StringBuilder left = new StringBuilder(sb.substring(s, mid));
-		StringBuilder right = new StringBuilder(sb.substring(mid, e));
-		StringBuilder lNext = new StringBuilder(sb).replace(s, mid, new StringBuilder(left).reverse().toString());
-		StringBuilder rNext = new StringBuilder(sb).replace(mid, e, new StringBuilder(right).reverse().toString());
-		dfs(mid, e, lNext, 1);
-		dfs(s, mid, rNext, 2);
-		if ((mid << 1) != s + e) {
-			mid += 1;
-			left = new StringBuilder(sb.substring(s, mid));
-			right = new StringBuilder(sb.substring(mid, e));
-			lNext = new StringBuilder(sb).replace(s, mid, new StringBuilder(left).reverse().toString());
-			rNext = new StringBuilder(sb).replace(mid, e, new StringBuilder(right).reverse().toString());
-			dfs(mid, e, lNext, 1);
-			dfs(s, mid, rNext, 2);
+		for (int i = 0, m; i <= s + e - mid * 2; i++) {
+			m = i + mid;
+			StringBuilder left = new StringBuilder(sb.substring(s, m));
+			StringBuilder right = new StringBuilder(sb.substring(m, e));
+			StringBuilder lNext = new StringBuilder(sb).replace(s, m, left.reverse().toString());
+			StringBuilder rNext = new StringBuilder(sb).replace(m, e, right.reverse().toString());
+			dfs(m, e, lNext);
+			dfs(s, m, rNext);
 		}
 	}
 }
