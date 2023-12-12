@@ -12,6 +12,7 @@ public class Main {
 	static int[] childCount;
 	static ArrayList<Integer>[] link;
 
+	// No queue
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int N = Integer.parseInt(br.readLine());
@@ -23,7 +24,6 @@ public class Main {
 		childCount = new int[N + 1];
 
 		Arrays.fill(depths, -1);
-		link[0].add(1);
 		for (int i = 1; i < N; i++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
 			int a = Integer.parseInt(st.nextToken());
@@ -42,12 +42,9 @@ public class Main {
 			saveParent[i] = new ArrayList<>();
 		}
 
-		save[0].add(0);
-
 		int bef = 0;
 		for (int i = 1, idx; i <= N; i++) {
 			idx = go[i - 1];
-
 			if (bef > depths[idx]) {
 				System.out.println(0);
 				return;
@@ -86,5 +83,6 @@ public class Main {
 			dfs(next, cnt + 1);
 
 		}
+
 	}
 }
