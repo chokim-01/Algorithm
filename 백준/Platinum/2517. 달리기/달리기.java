@@ -26,9 +26,7 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
 		input(br);
-
 		StringBuilder ans = new StringBuilder();
 		for (int number : numbers) {
 			ans.append(query(number, tree.length) + 1).append("\n");
