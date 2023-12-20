@@ -1,10 +1,9 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Queue;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -41,12 +40,12 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		input(br);
 		StringBuilder sb = new StringBuilder();
-		Queue<Node> q;
+		PriorityQueue<Node> q;
 		int[] v = new int[N + 1];
 		int[] ans = new int[N + 1];
 		Arrays.fill(v, Integer.MAX_VALUE);
 		Arrays.fill(ans, -1);
-		q = new ArrayDeque<>();
+		q = new PriorityQueue<>();
 		q.add(new Node(1, 0));
 		ans[1] = v[1] = 0;
 		while (!q.isEmpty()) {
