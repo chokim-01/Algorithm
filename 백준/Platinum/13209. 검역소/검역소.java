@@ -4,6 +4,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 import java.util.stream.Stream;
 
@@ -40,7 +41,7 @@ class Main {
 
 	static long dfs(int now, int b, long c) {
 		population[now] = city[now];
-		ArrayList<Long> list = new ArrayList<>();
+		PriorityQueue<Long> list = new PriorityQueue<>(Collections.reverseOrder());
 		for (int next : link[now]) {
 			if (b == next)
 				continue;
@@ -48,11 +49,8 @@ class Main {
 			list.add(nextV);
 			population[now] += nextV;
 		}
-		Collections.sort(list, Collections.reverseOrder());
-		for (long l : list) {
-			if (population[now] <= c)
-				break;
-			population[now] -= l;
+		while (!list.isEmpty() && population[now] > c) {
+			population[now] -= list.poll();
 			count++;
 		}
 		return population[now];
@@ -75,5 +73,6 @@ class Main {
 			link[a].add(b);
 			link[b].add(a);
 		}
+
 	}
 }
