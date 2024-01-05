@@ -26,7 +26,7 @@ class Main {
 			while (l < r) {
 				count = 0;
 				mid = (l + r) >> 1;
-				dfs(1, new boolean[N + 1], mid);
+				dfs(1, -1, mid);
 //				System.out.println(mid + " " + count);
 				if (K < count)
 					l = mid + 1;
@@ -38,14 +38,13 @@ class Main {
 		System.out.println(sb);
 	}
 
-	static long dfs(int now, boolean[] v, long c) {
-		v[now] = true;
+	static long dfs(int now, int b, long c) {
 		population[now] = city[now];
 		ArrayList<Long> list = new ArrayList<>();
 		for (int next : link[now]) {
-			if (v[next])
+			if (b == next)
 				continue;
-			long nextV = dfs(next, v, c);
+			long nextV = dfs(next, now, c);
 			list.add(nextV);
 			population[now] += nextV;
 		}
