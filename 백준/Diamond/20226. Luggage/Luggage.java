@@ -29,7 +29,6 @@ class Main {
 				map.put(n, map.get(n) + 1);
 				num = num / n;
 			}
-			map.put((long) 1, 0);
 			prime = new long[map.size()][];
 
 			int index = 0;
@@ -46,7 +45,7 @@ class Main {
 				long na = N / a;
 				int endJ = binSearch(i, BigInteger.valueOf(na));
 				if (endJ == -1)
-					continue;
+					break;
 				for (int j = i; j <= endJ; j++) {
 					long b = list.get(j);
 					long c = na / b;
@@ -90,9 +89,8 @@ class Main {
 			if (mul.pow(3).compareTo(max) <= 0) {
 				l = mid + 1;
 				ret = mid;
-			} else {
+			} else
 				r = mid;
-			}
 		}
 		return ret;
 	}
@@ -106,9 +104,9 @@ class Main {
 			if (mul.multiply(mul).compareTo(max) <= 0) {
 				l = mid + 1;
 				ret = mid;
-			} else {
+			} else 
 				r = mid;
-			}
+			
 		}
 		return ret;
 	}
