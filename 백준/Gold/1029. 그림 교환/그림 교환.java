@@ -3,9 +3,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 class Main {
+	static int N;
 	static int[][] map;
 	static int[][][] dp;
-	static int N;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -20,7 +20,6 @@ class Main {
 	static int dfs(int n, int v, int c) {
 		if (dp[n][v][c] != 0)
 			return dp[n][v][c];
-		int l = 0;
 		for (int i = 0; i < N; i++) {
 			int next = 1 << i;
 			if ((next & v) == next || map[n][i] < c)
