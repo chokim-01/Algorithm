@@ -80,12 +80,9 @@ class Main {
 			}
 			if (parent[e] == -1)
 				break;
-			int min = Integer.MAX_VALUE;
-			for (int now = e; now != s; now = parent[now])
-				min = Math.min(min, capacity[parent[now]][now]);
 			for (int now = e; now != s; now = parent[now]) {
-				capacity[parent[now]][now] -= min;
-				capacity[now][parent[now]] += min;
+				capacity[parent[now]][now] -= 1;
+				capacity[now][parent[now]] += 1;
 			}
 		}
 	}
