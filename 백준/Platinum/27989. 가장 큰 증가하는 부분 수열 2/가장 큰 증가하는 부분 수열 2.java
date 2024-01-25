@@ -7,18 +7,15 @@ import java.util.stream.Stream;
 
 public class Main {
 	static int N;
-	static long[] numbers;
-	static long[] nums, tree;
+	static long[] numbers, zipNumbers, tree;
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		N = Integer.parseInt(br.readLine());
 		numbers = Stream.of(br.readLine().split(" ")).mapToLong(Long::parseLong).toArray();
 		setUnit();
-		for (long n : numbers) {
-			long r = query(0, (int) n);
-			update((int) n, r + nums[(int) n]);
-		}
+		for (long n : numbers)
+			update((int) n, query(0, (int) n) + zipNumbers[(int) n]);
 		System.out.println(query(0, N));
 	}
 
@@ -43,7 +40,7 @@ public class Main {
 	}
 
 	static void setUnit() {
-		nums = new long[300001];
+		zipNumbers = new long[300001];
 		long[] cNums = numbers.clone();
 		Arrays.sort(cNums);
 		HashMap<Long, Integer> m = new HashMap<>();
@@ -51,13 +48,11 @@ public class Main {
 		for (long n : cNums) {
 			if (!m.containsKey(n))
 				m.put(n, ++cnt);
-			nums[m.get(n)] = n;
+			zipNumbers[m.get(n)] = n;
 		}
-		long max = 0;
-		for (int i = 0; i < N; i++) {
-			numbers[i] = m.get(numbers[i]);
-			max = max < numbers[i] ? numbers[i] : max;
-		}
+		int max = 0;
+		for (int i = 0; i < N; i++)
+			max = (int) Math.max(max, numbers[i] = m.get(numbers[i]));
 		N = (int) (max + 1);
 		tree = new long[N << 1];
 	}
