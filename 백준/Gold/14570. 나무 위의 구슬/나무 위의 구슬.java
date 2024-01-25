@@ -7,10 +7,8 @@ public class Main {
 	static Node[] node;
 
 	static class Node {
-		int num;
-		int cCount;
-		Node left;
-		Node right;
+		int num, cCount;
+		Node left, right;
 
 		public Node(int num) {
 			// TODO Auto-generated constructor stub
@@ -60,7 +58,6 @@ public class Main {
 			node[i].add(a, b);
 		}
 		long k = Long.parseLong(br.readLine());
-		int ans = dfs(node[1], k);
-		System.out.println(ans);
+		System.out.println(dfs(node[1], k));
 	}
 }
