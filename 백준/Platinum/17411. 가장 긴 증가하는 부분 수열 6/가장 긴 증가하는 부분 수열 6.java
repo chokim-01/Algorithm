@@ -9,41 +9,36 @@ public class Main {
 	static final int MAX = 1000001;
 	static final int mod = 1000000007;
 
-	static class Seg {
+	static class FWick {
 		long[][] tree;
 
-		public Seg() {
+		public FWick() {
 			// TODO Auto-generated constructor stub
-			tree = new long[MAX << 1][2];
+			tree = new long[MAX][2];
 		}
 
-		long[] query(int l, int r) {
+		long[] query(int r) {
 			long[] ret = new long[] { 0, 0 };
-			l += MAX;
-			r += MAX;
-			for (; l < r; l >>= 1, r >>= 1) {
-				if ((l & 1) == 1)
-					ret = merge(ret, tree[l++]);
-				if ((r & 1) == 1)
-					ret = merge(ret, tree[--r]);
+			for (; r > 0; r -= r & -r) {
+				if (tree[r][0] == ret[0])
+					ret[1] = (ret[1] + tree[r][1]) % mod;
+				else if (tree[r][0] > ret[0]) {
+					ret[0] = tree[r][0];
+					ret[1] = tree[r][1];
+				}
 			}
 			return ret;
 		}
 
 		void update(int idx, int v, long v2) {
-			idx += MAX;
-			tree[idx][1] = (v2 + (tree[idx][0] == v ? tree[idx][1] : 0)) % mod;
-			tree[idx][0] = v;
-			while ((idx >>= 1) != 0)
-				tree[idx] = merge(tree[idx << 1], tree[idx << 1 | 1]);
-		}
-
-		long[] merge(long[] a, long[] b) {
-			if (a[0] > b[0])
-				return a;
-			else if (a[0] < b[0])
-				return b;
-			return new long[] { a[0], (a[1] + b[1]) % mod };
+			for (; idx < MAX; idx += idx & -idx) {
+				if (tree[idx][0] == v)
+					tree[idx][1] = (tree[idx][1] + v2) % mod;
+				else if (tree[idx][0] < v) {
+					tree[idx][0] = v;
+					tree[idx][1] = v2;
+				}
+			}
 		}
 	}
 
@@ -58,14 +53,15 @@ public class Main {
 		int cnt = 0;
 		for (int c : c_nums)
 			if (!map.containsKey(c))
-				map.put(c, cnt++);
+				map.put(c, ++cnt);
 
-		Seg front = new Seg();
+		FWick fwick = new FWick();
 		for (int i = 0; i < N; i++) {
 			int num = map.get(nums[i]);
-			long[] res = front.query(0, num);
-			front.update(num, (int) res[0] + 1, res[1] == 0 ? 1 : res[1]);
+			long[] res = fwick.query(num - 1);
+			fwick.update(num, (int) res[0] + 1, res[1] == 0 ? 1 : res[1]);
 		}
-		System.out.println(front.tree[1][0] + " " + front.tree[1][1]);
+		long[] ans = fwick.query(MAX - 1);
+		System.out.println(ans[0] + " " + ans[1]);
 	}
 }
