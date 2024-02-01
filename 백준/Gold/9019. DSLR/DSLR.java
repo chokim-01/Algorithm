@@ -12,9 +12,9 @@ public class Main {
 
 	static class Node {
 		int num;
-		StringBuilder route;
+		String route;
 
-		public Node(int num, StringBuilder route) {
+		public Node(int num, String route) {
 			// TODO Auto-generated constructor stub
 			this.num = num;
 			this.route = route;
@@ -34,7 +34,7 @@ public class Main {
 			v = new boolean[10000];
 			v[start] = true;
 			q = new ArrayDeque<>();
-			q.add(new Node(start, new StringBuilder()));
+			q.add(new Node(start, ""));
 			outer: while (!q.isEmpty()) {
 				Node n = q.poll();
 				for (int d = 0; d < 4; d++) {
@@ -43,26 +43,26 @@ public class Main {
 						continue;
 					v[next] = true;
 
-					StringBuilder tsb = new StringBuilder(n.route);
+					String ns = null;
 					switch (d) {
 					case 0:
-						tsb.append('D');
+						ns = "D";
 						break;
 					case 1:
-						tsb.append('S');
+						ns = "S";
 						break;
 					case 2:
-						tsb.append('L');
+						ns = "L";
 						break;
 					case 3:
-						tsb.append('R');
+						ns = "R";
 						break;
 					}
 					if (next == end) {
-						ans.append(tsb).append("\n");
+						ans.append(n.route + ns).append("\n");
 						break outer;
 					}
-					q.add(new Node(next, tsb));
+					q.add(new Node(next, n.route + ns));
 				}
 			}
 		}
