@@ -8,8 +8,18 @@ import java.util.StringTokenizer;
 
 public class Main {
 	static boolean[] v;
-	static int[][] bef;
-	static Queue<Integer> q;
+	static Queue<Node> q;
+
+	static class Node {
+		int num;
+		StringBuilder route;
+
+		public Node(int num, StringBuilder route) {
+			// TODO Auto-generated constructor stub
+			this.num = num;
+			this.route = route;
+		}
+	}
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -22,44 +32,39 @@ public class Main {
 			int start = Integer.parseInt(st.nextToken());
 			int end = Integer.parseInt(st.nextToken());
 			v = new boolean[10000];
-			bef = new int[10000][2];
 			v[start] = true;
-			bef[start][0] = -1;
-			bef[start][1] = -1;
 			q = new ArrayDeque<>();
-			q.add(start);
+			q.add(new Node(start, new StringBuilder()));
 			outer: while (!q.isEmpty()) {
-				int now = q.poll();
+				Node n = q.poll();
 				for (int d = 0; d < 4; d++) {
-					int next = make(now, d);
+					int next = make(n.num, d);
 					if (v[next])
 						continue;
 					v[next] = true;
-					bef[next][0] = now;
-					bef[next][1] = d;
-					if (next == end)
+
+					StringBuilder tsb = new StringBuilder(n.route);
+					switch (d) {
+					case 0:
+						tsb.append('D');
+						break;
+					case 1:
+						tsb.append('S');
+						break;
+					case 2:
+						tsb.append('L');
+						break;
+					case 3:
+						tsb.append('R');
+						break;
+					}
+					if (next == end) {
+						ans.append(tsb).append("\n");
 						break outer;
-					q.add(next);
+					}
+					q.add(new Node(next, tsb));
 				}
 			}
-			StringBuilder sb = new StringBuilder();
-			for (int now = end; bef[now][0] != -1; now = bef[now][0]) {
-				switch (bef[now][1]) {
-				case 0:
-					sb.append('D');
-					break;
-				case 1:
-					sb.append('S');
-					break;
-				case 2:
-					sb.append('L');
-					break;
-				case 3:
-					sb.append('R');
-					break;
-				}
-			}
-			ans.append(sb.reverse()).append("\n");
 		}
 		System.out.println(ans);
 
