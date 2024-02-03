@@ -20,6 +20,8 @@ public class Main {
 
 		for (int i = 0; i < arr.length; i++)
 			if (arr[i][0] == K) {
+				while (i > 0 && arr[i][1] == arr[i - 1][1] && arr[i][2] == arr[i - 1][2] && arr[i][3] == arr[i - 1][3])
+					i--;
 				System.out.println(i + 1);
 				return;
 			}
