@@ -35,7 +35,7 @@ public class Main {
 		}
 		int ans = 0;
 		for (int g : gears)
-			if ((g & 1) == 1)
+			if ((g & top) == top)
 				ans++;
 		System.out.println(ans);
 	}
