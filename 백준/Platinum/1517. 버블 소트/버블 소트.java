@@ -102,16 +102,16 @@ public class Main {
 			n = Integer.parseInt(st.nextToken());
 			q.add(new Node(i, n));
 		}
-		
+
 		SegmentTree tree = new SegmentTree(N);
 		int[] arr = new int[N + 1];
 		tree.init(arr, 1, 1, N);
-		
+
 		long ans = 0;
 		int time = -1;
 		while (!q.isEmpty()) {
 			Node n = q.poll();
-			int index = n.index + tree.sum(1, 1, N, n.index+1, N) - ++time;
+			int index = n.index + tree.sum(1, 1, N, n.index + 1, N) - ++time;
 			if (index == 0)
 				continue;
 			tree.update(1, 1, N, n.index, 1);
