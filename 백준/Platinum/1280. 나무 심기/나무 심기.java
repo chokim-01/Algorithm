@@ -45,22 +45,25 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-
 		Seg seg = new Seg();
 		long ans = 1;
 		int N = Integer.parseInt(br.readLine()) - 1;
 		seg.update(Integer.parseInt(br.readLine()));
 		while (N-- > 0) {
-            int num = Integer.parseInt(br.readLine());
+			int num = Integer.parseInt(br.readLine());
 
-            long[] q = seg.query(0, num);
-            long[] q2 = seg.query(num, MAX);
+			long[] q = seg.query(0, num);
+			long[] q2 = seg.query(num, MAX);
 
-            long l = (q[1] * num - q[0]) % MOD;
-            long r = (q2[0] - (q2[1] * num) % MOD + MOD) % MOD;
+			long l = (q[1] * num - q[0]) % MOD;
+			long r = 0;
+			if (q2[0] - q2[1] * num < 0)
+				r = (q2[0] - (q2[1] * num) % MOD + MOD) % MOD;
+			else
+				r = (q2[0] - q2[1] * num) % MOD;
 
-            seg.update(num);
-            ans = (ans * ((l + r) % MOD)) % MOD;
+			seg.update(num);
+			ans = (ans * ((l + r) % MOD)) % MOD;
 		}
 		System.out.println(ans);
 	}
