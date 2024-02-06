@@ -8,7 +8,11 @@
 
 ### 분류
 
-구현(implementation), 시뮬레이션(simulation)
+구현, 시뮬레이션
+
+### 제출 일자
+
+2021년 10월 17일 09:27:51
 
 ### 문제 설명
 
@@ -62,7 +66,7 @@
 
 <p>위의 보드에서 1×2인 블록을 (0, 0), (0, 1)에 놓으면 <그림 9>와 같다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/c2151fd5-4e43-4403-bf10-7cbef642a6eb/-/preview/" style="width: 608px; height: 614px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 608px; height: 614px;"></p>
 
 <p style="text-align: center;"><그림 9></p>
 
@@ -86,7 +90,7 @@
 
 <p><그림 12>는 <그림 11>의 상태에서 파란색 보드는 모든 블록이 오른쪽으로 한 칸 이동했고, 초록색 보드의 4번 행이 모두 사라진 상태이다. 이제, 초록색 보드에서 사라진 행의 위에 있는 블록이 아래로 한 칸씩 내려와야 한다. 이동한 후의 상태는 <그림 13>과 같다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/81a0a734-129b-47e8-8142-5579f747f678/-/preview/" style="width: 609px; height: 618px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 609px; height: 618px;"></p>
 
 <p style="text-align: center;"><그림 13></p>
 
