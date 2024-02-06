@@ -45,6 +45,7 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
 		Seg seg = new Seg();
 		long ans = 1;
 		int N = Integer.parseInt(br.readLine()) - 1;
@@ -56,11 +57,7 @@ public class Main {
 			long[] q2 = seg.query(num, MAX);
 
 			long l = (q[1] * num - q[0]) % MOD;
-			long r = 0;
-			if (q2[0] - q2[1] * num < 0)
-				r = (q2[0] - (q2[1] * num) % MOD + MOD) % MOD;
-			else
-				r = (q2[0] - q2[1] * num) % MOD;
+			long r = ((q2[0] + MOD) - (q2[1] * num) % MOD) % MOD;
 
 			seg.update(num);
 			ans = (ans * ((l + r) % MOD)) % MOD;
