@@ -8,30 +8,22 @@ public class Main {
 
     static class Trie {
         Trie[] children;
-        boolean endFlag;
 
         Trie() {
             this.children = new Trie[26];
-            endFlag = false;
         }
 
         void add(String s) {
             Trie now = head;
-            for (char c : s.toCharArray()) {
-                if (now.children[c - 'a'] == null)
-                    now.children[c - 'a'] = new Trie();
-                now = now.children[c - 'a'];
-            }
-            now.endFlag = true;
+            for (char c : s.toCharArray())
+                now = now.children[c - 'a'] == null ? now.children[c - 'a'] = new Trie() : now.children[c - 'a'];
         }
 
         boolean contains(String s) {
             Trie now = head;
-            for (char c : s.toCharArray()) {
-                if (now.children[c - 'a'] == null)
+            for (char c : s.toCharArray())
+                if ((now = now.children[c - 'a']) == null)
                     return false;
-                now = now.children[c - 'a'];
-            }
             return true;
         }
 
@@ -48,11 +40,11 @@ public class Main {
         Trie trie = new Trie();
         head = trie;
 
-        for (int i = 0; i < N; i++)
+        while (N-- > 0)
             trie.add(br.readLine());
 
         int ans = 0;
-        for (int j = 0; j < M; j++)
+        while (M-- > 0)
             ans += trie.contains(br.readLine()) ? 1 : 0;
 
         System.out.println(ans);
