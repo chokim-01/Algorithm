@@ -14,7 +14,7 @@ public class Main {
 
         int[] xy = Stream.of(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
 
-        Queue<Integer> a_stack = new ArrayDeque<>();
+        Queue<Integer> a_que = new ArrayDeque<>();
 
         start_v = new int[5002];
         start_v[0] = 1;
@@ -28,7 +28,7 @@ public class Main {
             for (int j = xy[1]; j <= xy[3]; j++) {
                 int p_max = Math.max(Math.abs(i), Math.abs(j));
                 int c = calc(i, j, p_max);
-                a_stack.add(c);
+                a_que.add(c);
                 max = max < c ? c : max;
             }
         }
@@ -38,11 +38,10 @@ public class Main {
         StringBuilder ans = new StringBuilder();
         for (int i = xy[0]; i <= xy[2]; i++) {
             for (int j = xy[1]; j <= xy[3]; j++)
-                ans.append(String.format(format, a_stack.poll()));
+                ans.append(String.format(format, a_que.poll()));
             ans.append("\n");
         }
         System.out.println(ans);
-
     }
 
     static int calc(int x, int y, int m) {
@@ -53,11 +52,11 @@ public class Main {
 
         int ret = start_v[m] - 1;
         if (y == m)
-            return ret + m - x;
+            return ret + (m - x);
         if (x == -m)
-            return ret + 2 * m + (m - y);
+            return ret + (m - y) + 2 * m;
         if (y == -m)
-            return ret + 4 * m + (m + x);
-        return ret + 6 * m + (m + y);
+            return ret + (m + x) + 4 * m;
+        return ret + (m + y) + 6 * m;
     }
 }
