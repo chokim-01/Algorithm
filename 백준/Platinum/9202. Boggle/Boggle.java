@@ -1,8 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Comparator;
-import java.util.TreeSet;
+import java.util.HashSet;
 
 class Main {
 
@@ -41,7 +40,10 @@ class Main {
     static boolean[][] v;
     static int[] score = {0, 0, 0, 1, 1, 2, 3, 5, 11};
 
-    static TreeSet<String> ansList;
+    static HashSet<String> ansList;
+
+    static int sum = 0;
+    static String longest = "";
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -52,20 +54,14 @@ class Main {
         for (String w : words)
             head.add(w);
 
-        ansList = new TreeSet<>(new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                if (o1.length() == o2.length())
-                    return o1.compareTo(o2);
-                return o2.length() - o1.length();
-            }
-        });
+        ansList = new HashSet<>();
 
         v = new boolean[4][4];
 
         StringBuilder sb = new StringBuilder();
 
         for (int b = 0; b < B; b++) {
+            init();
             ansList.clear();
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 4; j++) {
@@ -75,17 +71,15 @@ class Main {
                 }
             }
 
-            int sum = 0;
-            if (ansList.size() == 0)
-                sb.append("0 0").append("\n");
-
-            else {
-                for (String s : ansList)
-                    sum += score[s.length()];
-                sb.append(sum).append(" ").append(ansList.first()).append(" ").append(ansList.size()).append("\n");
-            }
+            sb.append(sum).append(" ").append(longest).append(" ").append(ansList.size()).append("\n");
         }
         System.out.println(sb);
+    }
+
+    static void init() {
+        ansList.clear();
+        sum = 0;
+        longest = "";
     }
 
     static void dfs(int depth, int b, int x, int y, Trie now) {
@@ -93,8 +87,15 @@ class Main {
             return;
         v[x][y] = true;
 
-        if (now.endFlag)
+        if (now.endFlag && !ansList.contains(now.word)) {
+            sum += score[now.word.length()];
+            if (longest.length() < now.word.length())
+                longest = now.word;
+            else if (longest.length() == now.word.length())
+                if (longest.compareTo(now.word) > 0)
+                    longest = now.word;
             ansList.add(now.word);
+        }
 
         for (int d = 0; d < 8; d++) {
             int nx = x + dxy[d][0];
