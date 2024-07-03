@@ -36,12 +36,12 @@ class Main {
     static int W, B;
 
     static String[] words;
-    static char[][][] boggles;
+    static int[][][] boggles;
     static boolean[][] v;
     static int[] score = {0, 0, 0, 1, 1, 2, 3, 5, 11};
+    static int[][] dxy = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
 
     static HashSet<String> ansList;
-
     static int sum = 0;
     static String longest = "";
 
@@ -64,10 +64,10 @@ class Main {
             init();
             ansList.clear();
             for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 4; j++) {
-                    char now = boggles[b][i][j];
-                    if (head.child[now - 'A'] != null)
-                        dfs(1, b, i, j, head.child[now - 'A']);
+                for (int j = 0, now; j < 4; j++) {
+                    now = boggles[b][i][j];
+                    if (head.child[now] != null)
+                        dfs(1, b, i, j, head.child[now]);
                 }
             }
 
@@ -104,15 +104,13 @@ class Main {
             if (!mapChk(nx, ny) || v[nx][ny])
                 continue;
 
-            char next = boggles[b][nx][ny];
-            if (now.child[next - 'A'] == null)
+            int next = boggles[b][nx][ny];
+            if (now.child[next] == null)
                 continue;
-            dfs(depth + 1, b, nx, ny, now.child[next - 'A']);
+            dfs(depth + 1, b, nx, ny, now.child[next]);
         }
         v[x][y] = false;
     }
-
-    static int[][] dxy = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}, {-1, -1}, {-1, 1}, {1, -1}, {1, 1}};
 
     static boolean mapChk(int x, int y) {
         if (x < 0 || y < 0 || x >= 4 || y >= 4)
@@ -123,16 +121,20 @@ class Main {
     static void input(BufferedReader br) throws IOException {
         W = Integer.parseInt(br.readLine());
         words = new String[W];
-        for (int i = 0; i < W; i++)
+        for (int i = 0; i < W; i++) {
             words[i] = br.readLine();
+        }
 
         br.readLine();
 
         B = Integer.parseInt(br.readLine());
-        boggles = new char[B][4][];
+        boggles = new int[B][4][4];
         for (int i = 0; i < B; i++) {
-            for (int j = 0; j < 4; j++)
-                boggles[i][j] = br.readLine().toCharArray();
+            for (int j = 0; j < 4; j++) {
+                String s = br.readLine();
+                for(int k = 0;k<4;k++)
+                    boggles[i][j][k] = s.charAt(k)-'A';
+            }
             if (i != B - 1)
                 br.readLine();
         }
