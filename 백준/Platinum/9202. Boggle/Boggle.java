@@ -8,6 +8,7 @@ class Main {
 
     static class Trie {
         Trie[] child;
+        String word;
         boolean endFlag;
 
         Trie(char c, boolean flag) {
@@ -22,8 +23,10 @@ class Main {
 
                 if (now.child[c - 'A'] == null)
                     now.child[c - 'A'] = new Trie(c, false);
-                if (i == s.length() - 1)
+                if (i == s.length() - 1) {
                     now.child[c - 'A'].endFlag = true;
+                    now.child[c - 'A'].word = s;
+                }
 
                 now = now.child[c - 'A'];
             }
@@ -35,10 +38,10 @@ class Main {
 
     static String[] words;
     static char[][][] boggles;
-    static TreeSet<String> ansList;
+    static boolean[][] v;
     static int[] score = {0, 0, 0, 1, 1, 2, 3, 5, 11};
 
-    static boolean[][] v;
+    static TreeSet<String> ansList;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -68,7 +71,7 @@ class Main {
                 for (int j = 0; j < 4; j++) {
                     char now = boggles[b][i][j];
                     if (head.child[now - 'A'] != null)
-                        dfs(1, b, i, j, head.child[now - 'A'], new StringBuilder(String.valueOf(now)));
+                        dfs(1, b, i, j, head.child[now - 'A']);
                 }
             }
 
@@ -85,13 +88,13 @@ class Main {
         System.out.println(sb);
     }
 
-    static void dfs(int depth, int b, int x, int y, Trie now, StringBuilder word) {
+    static void dfs(int depth, int b, int x, int y, Trie now) {
         if (depth > 9)
             return;
         v[x][y] = true;
 
         if (now.endFlag)
-            ansList.add(word.toString());
+            ansList.add(now.word);
 
         for (int d = 0; d < 8; d++) {
             int nx = x + dxy[d][0];
@@ -103,7 +106,7 @@ class Main {
             char next = boggles[b][nx][ny];
             if (now.child[next - 'A'] == null)
                 continue;
-            dfs(depth + 1, b, nx, ny, now.child[next - 'A'], new StringBuilder(word).append(next));
+            dfs(depth + 1, b, nx, ny, now.child[next - 'A']);
         }
         v[x][y] = false;
     }
