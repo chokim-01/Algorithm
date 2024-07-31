@@ -1,41 +1,47 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.stream.Stream;
+import java.io.*;
+import java.util.StringTokenizer;
 
 public class Main {
-    static int fraction[][];
+    public static void fraction_sum(int[] A, int[] B) {
+        StringBuilder sb = new StringBuilder();
 
+        // 굳이 0으로 초기화하고 다시 변수에 값을 집어넣을 필요는 없을 것 같습니다.
+        int numerator = (A[0] * B[1]) + (A[1] * B[0]); // 분자
+        int denominator = B[0] * B[1]; // 분모
+        int gcdValue = findGCD(numerator, denominator); // gcd 값
+
+        sb.append(numerator / gcdValue).append(" ").append(denominator / gcdValue);
+        
+        System.out.println(sb);
+    }
+
+    // 최대공약수
+    // 반복문으로 작성해도 현재 코드보다 간결하게 작성할 수 있을 것 같네요
+    static int findGCD(long A, long B) {
+        long max = Math.max(A, B);
+        long min = Math.min(A, B);
+
+        while (max != 0 && min != 0) {
+            long result = max % min;
+            max = min;
+            min = result;
+        }
+
+        return (int) max;
+    }
+
+    // A,B는 사용되지 않는 변수 같습니다.
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        input(br);
+        int[] numerator = new int[2];
+        int[] denominator = new int[2];
 
-        int[] ans = solve();
+        for (int i = 0; i < 2; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine(), " ");
+            numerator[i] = Integer.parseInt(st.nextToken());
+            denominator[i] = Integer.parseInt(st.nextToken());
+        }
 
-        System.out.println(ans[0] + " " + ans[1]);
-    }
-
-    static int[] solve() {
-        int numerator = fraction[0][0] * fraction[1][1] + fraction[0][1] * fraction[1][0];
-        int denominator = fraction[0][1] * fraction[1][1];
-
-        int gcd = gcd(numerator,denominator);
-        numerator /= gcd;
-        denominator /= gcd;
-        return new int[]{numerator, denominator};
-    }
-
-    static int gcd(int a, int b) {
-        if (b == 0)
-            return a;
-        return gcd(b, a % b);
-
-    }
-
-    static void input(BufferedReader br) throws IOException {
-        fraction = new int[2][2];
-        for (int i = 0; i < 2; i++)
-            fraction[i] = Stream.of(br.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-
+        fraction_sum(numerator, denominator);
     }
 }
