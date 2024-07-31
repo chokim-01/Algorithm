@@ -2,7 +2,6 @@ import java.io.IOException;
 import java.util.Scanner;
 
 class Main {
-    static final int MAX = (int) 10e7;
     static boolean[] prime;
 
     public static void main(String[] args) throws IOException {
@@ -16,7 +15,7 @@ class Main {
     static int solve(long l, long r) {
         int ret = 0;
 
-        era();
+        era(r);
         for (int i = 2; i <= Math.sqrt(r); i++) {
             if (!prime[i]) {
                 long v = i;
@@ -30,7 +29,8 @@ class Main {
         return ret;
     }
 
-    static void era() {
+    static void era(long r) {
+        int MAX = (int)Math.sqrt(r);
         prime = new boolean[MAX + 1];
         for (int i = 2; i * i <= MAX; i++)
             if (!prime[i])
