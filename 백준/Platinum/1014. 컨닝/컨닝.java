@@ -78,6 +78,7 @@ public class Main {
 				return true;
 			}
 		}
+        
 		return false;
 	}
 
@@ -85,9 +86,11 @@ public class Main {
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		N = Integer.parseInt(st.nextToken());
 		M = Integer.parseInt(st.nextToken());
+        
 		map = new boolean[N * M];
 		visit = new boolean[N * M];
 		occupancy = new int[N * M];
+        
 		Arrays.fill(occupancy, -1);
 		tot = 0;
 
