@@ -6,19 +6,14 @@ import java.util.*;
 class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int N = Integer.parseInt(br.readLine());
+        int N = Integer.parseInt(br.readLine())-1;
 
         StringTokenizer st = new StringTokenizer(br.readLine());
 
-        boolean[] m = new boolean[N + 1];
-        while (st.hasMoreTokens()) {
-            int n = Integer.parseInt(st.nextToken());
-            if (!m[n])
-                m[n] = true;
-            else {
-                System.out.println(n);
-                break;
-            }
-        }
+        long sum = 0;
+        while (st.hasMoreTokens())
+            sum += Integer.parseInt(st.nextToken());
+
+        System.out.println(sum - ((long)N * (N + 1) / 2));
     }
 }
