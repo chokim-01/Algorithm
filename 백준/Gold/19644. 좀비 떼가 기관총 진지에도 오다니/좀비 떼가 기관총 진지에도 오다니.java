@@ -18,18 +18,15 @@ class Main {
             mGun(i, Ml, Mk);
             int revert = attack;
             attack += save[i];
-
-            int health = attack + zombie[i];
-
-            if (health > 0) {
+            
+            if (attack + zombie[i] > 0) {
                 if (--C < 0) {
                     System.out.println("NO");
                     return;
                 }
-                attack = revert;
 
                 mGun(i, Ml, -Mk);
-                attack += save[i];
+                attack = revert + save[i];
             }
 
         }
@@ -39,7 +36,6 @@ class Main {
     static void mGun(int index, int ml, int mk) {
         save[index] -= mk;
         save[(index + ml) >= L + 2 ? L + 1 : index + ml] += mk;
-
     }
 
     static void input(BufferedReader br) throws IOException {
@@ -56,7 +52,6 @@ class Main {
         zombie = new int[L + 1];
         for (int i = 1; i <= L; i++)
             zombie[i] = Integer.parseInt(br.readLine());
-
     }
 
 }
