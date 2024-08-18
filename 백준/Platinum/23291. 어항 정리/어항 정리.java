@@ -196,7 +196,6 @@ class Main {
 				if (map[i][j] != 0)
 					list.get(i).set(j, list.get(i).get(j) + map[i][j]);
 	}
-
 	static void print() {
 		for (int i = 0; i < list.size(); i++) {
 			for (int j = 0; j < list.get(i).size(); j++) {
