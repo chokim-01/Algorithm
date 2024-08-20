@@ -7,6 +7,8 @@ import java.util.StringTokenizer;
 import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
+// 조합, 탐색만으로 문제 풀이
+
 public class Main {
     static int N, M;
     static int[][] map, link;
