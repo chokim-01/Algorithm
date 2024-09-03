@@ -18,7 +18,7 @@ public class Main {
         int[] ans = new int[]{100000, 100000, 100000};
         for (int a = 1; a <= N; a++) {
             for (int b = a + 1; b <= N; b++) {
-                int cost = bfs(a, b, ans[2]) << 1;
+                int cost = bfs(a, b, ans[2]);
 
                 if (ans[2] > cost) {
                     ans[2] = cost;
@@ -46,20 +46,25 @@ public class Main {
         v = new boolean[N + 1];
         v[a] = v[b] = true;
 
+        int time = 0;
         int cost = 0;
         while (cost <= max && (!firstStore.isEmpty() || !secondStore.isEmpty())) {
+            time++;
             int firstSize = firstStore.size();
+            int count = 0;
             while (firstSize-- > 0) {
                 int now = firstStore.poll();
                 for (int next : link[now]) {
                     if (v[next])
                         continue;
                     v[next] = true;
-                    cost++;
+                    count++;
                     firstStore.add(next);
                 }
             }
+            cost += (time * count) << 1;
 
+            count = 0;
             int secondSize = secondStore.size();
             while (secondSize-- > 0) {
                 int now = secondStore.poll();
@@ -67,11 +72,11 @@ public class Main {
                     if (v[next])
                         continue;
                     v[next] = true;
-                    cost++;
+                    count++;
                     secondStore.add(next);
                 }
             }
-
+            cost += (time * count) << 1;
         }
         return cost;
     }
