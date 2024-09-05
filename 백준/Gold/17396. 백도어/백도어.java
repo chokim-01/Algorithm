@@ -41,7 +41,7 @@ public class Main {
         Queue<Node> q = new PriorityQueue<>();
         q.add(new Node(0, 0));
 
-        while (!q.isEmpty() && q.peek().x != N-1) {
+        while (!q.isEmpty()) {
             Node now = q.poll();
 
             if(now.cost > v[now.x])
