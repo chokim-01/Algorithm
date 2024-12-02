@@ -33,11 +33,13 @@ public class Main {
 			int right = 1000000000;
 			while (left <= right) {
 				int mid = (left + right) / 2;
+                
 				if (query(a + N - 1, b + N, mid) < k)
 					left = mid + 1;
 				else
 					right = mid - 1;
 			}
+            
 			sb.append(left).append("\n");
 		}
 		System.out.println(sb);
@@ -46,6 +48,7 @@ public class Main {
 	static void init() {
 		for (int i = 0; i < tree.length; i++)
 			tree[i] = new ArrayList<>();
+        
 		for (int i = N; i < N + numbers.length; i++) {
 			int n = i;
 			do {
@@ -55,8 +58,6 @@ public class Main {
 		for (int i = 0; i < N; i++)
 			Collections.sort(tree[i]);
 	}
-	// [ 1,5,2,6,4]
-	// 정렬 후 3번째.
 
 	static int query(int l, int r, int key) {
 		int res = 0;
